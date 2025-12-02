@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: grafana-vs
+  namespace: monitoring
+spec:
+  hosts:
+  - grafana.pheonix.live
+  gateways:
+  - istio-ingress/main-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        # The service name usually follows: <release-name>-grafana
+        host: monitoring-stack-grafana.monitoring.svc.cluster.local
+        port:
+          number: 80

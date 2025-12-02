@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opensearch
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "4" # CRITICAL: Places logging backend alongside Vault
+spec:
+  project: default
+  
+  sources:
+    # ----------------------------------------------------------------------
+    # SOURCE 1: Git Repository (The Values Provider)
+    # Defines the '$values' variable used by the Helm Chart
+    # ----------------------------------------------------------------------
+    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
+      targetRevision: main
+      ref: values  # <--- Sets the variable $values
+      
+    # ----------------------------------------------------------------------
+    # SOURCE 2: Helm Chart (The Consumer)
+    # ----------------------------------------------------------------------
+    - repoURL: https://opensearch-project.github.io/helm-charts/
+      targetRevision: 3.3.2
+      chart: opensearch
+      helm:
+        valueFiles:
+          # Uses the $values variable from Source 1
+          - $values/platform/logging/opensearch-values.yaml 
+          
+    # Note: No Source 3 is needed here, as the VirtualService is defined separately (platform/logging/opensearch-ingress.yaml)
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: opensearch # Deploy the stack into the 'opensearch' namespace
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

@@ -1,0 +1,43 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: phoenix-staging-router
+  namespace: phoenix-staging # Deploy in the application namespace
+spec:
+  hosts:
+    - "pheonix-staging.pheonix.live"
+  gateways:
+    - istio-ingress/staging-gateway # Binds to the new dedicated staging gateway
+  http:
+  
+  # 1. Route for User Service (Highest Priority: Specific Path Match)
+  - match:
+    - uri:
+        # CRITICAL: Match traffic starting with /api/user
+        prefix: /api/user 
+    route:
+    - destination:
+        host: user-service.phoenix-staging.svc.cluster.local # Internal FQDN
+        port:
+          number: 8080 # App's internal port
+  
+  # 2. Route for Payment Service
+  - match:
+    - uri:
+        prefix: /api/payment 
+    route:
+    - destination:
+        host: payment-service.phoenix-staging.svc.cluster.local
+        port:
+          number: 8080
+          
+  # 3. Catch-all for Root/Static Content
+  - match:
+    - uri:
+        prefix: / 
+    route:
+    - destination:
+        # You can point this to a static front-end service or another entry point
+        host: front-end-service.phoenix-staging.svc.cluster.local
+        port:
+          number: 80

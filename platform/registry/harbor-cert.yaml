@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: harbor-registry-cert
+  namespace: harbor
+spec:
+  secretName: harbor-registry-tls # The secret the Nginx Ingress will consume
+  issuerRef:
+    name: letsencrypt 
+    kind: ClusterIssuer
+  dnsNames:
+    - registry.pheonix.live

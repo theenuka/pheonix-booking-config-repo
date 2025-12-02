@@ -1,0 +1,22 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: jwt-validation-policy
+  namespace: phoenix-staging  # Deploy where the Ingress Gateway resides
+spec:
+  selector:
+    # CRITICAL: This targets the shared Envoy proxy workload
+    matchLabels:
+      istio: ingress 
+  jwtRules:
+  - issuer: "https://api.asgardeo.io/t/laminarflowai/oauth2/token" 
+    jwksUri: "https://api.asgardeo.io/t/laminarflowai/oauth2/jwks" # REPLACE with your IdP's public key endpoint
+    
+    # These claims are extracted and attached to the request headers for AuthorizationPolicy to use
+    outputClaimToHeaders:
+    - header: x-auth-user-id
+      claim: sub 
+    - header: x-auth-user-email
+      claim: email
+    - header: x-auth-user-groups
+      claim: groups

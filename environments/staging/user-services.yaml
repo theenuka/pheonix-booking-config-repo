@@ -1,0 +1,11 @@
+# This file is loaded LAST by ArgoCD.
+
+# We only define the fields we are overriding.
+user-service:
+  image:
+    # CRITICAL: This is the field GitHub Actions will update to the latest SHA.
+    tag: "git-sha-7a8e2b3" 
+  
+  # Example of other staging overrides:
+  replicaCount: 1
+  debugMode: true

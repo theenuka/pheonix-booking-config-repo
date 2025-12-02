@@ -1,0 +1,53 @@
+# platform/monitoring/values.yaml
+
+# 1. Grafana Configuration
+grafana:
+  enabled: true
+  adminPassword: "admin"  # Change this on first login!
+  
+  # Persistence (Save Dashboards/Users)
+  persistence:
+    enabled: true
+    type: statefulset
+    storageClassName: "gp2"
+    size: 10Gi
+
+  defaultConfig:
+    livenessProbe:
+      initialDelaySeconds: 45
+    readinessProbe:
+      initialDelaySeconds: 45
+
+# 2. Prometheus Configuration
+prometheus:
+  enabled: true
+  prometheusSpec:
+    # Persistence (Save Metrics Data)
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: "gp2"
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi  # Metrics eat space fast!
+    
+    # Critical: Allow Prometheus to find ServiceMonitors in other namespaces
+    # (e.g., Vault in 'vault' ns, Istio in 'istio-system' ns)
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorNamespaceSelector: {}
+    podMonitorSelectorNilUsesHelmValues: false
+    podMonitorNamespaceSelector: {}
+
+# 3. Alertmanager Configuration
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: "gp2"
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi

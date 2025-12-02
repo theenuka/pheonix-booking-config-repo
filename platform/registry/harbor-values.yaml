@@ -1,0 +1,30 @@
+# platform/registry/harbor-values.yaml
+expose:
+  type: loadBalancer
+  tls:
+    enabled: true
+    certSource: secret
+    secret:
+      secretName: "harbor-registry-tls"
+      notarySecretName: "harbor-registry-tls"
+  loadBalancer:
+    name: harbor
+
+externalURL: https://registry.pheonix.live
+
+harborAdminPassword: "Harbor@12345"
+
+persistence:
+  enabled: true
+  imageChartStorage:
+    storageClass: "gp2"  # Changed to match existing PVCs
+    size: 5Gi
+
+database:
+  internal:
+    persistence:
+      storageClass: "gp2"  # Changed to match existing PVCs
+      size: 2Gi
+
+redis:
+  enabled: true

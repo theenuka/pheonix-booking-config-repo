@@ -1,0 +1,32 @@
+# path: platform/monitoring/kiali-ingress.yaml
+
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: kiali-vs
+  namespace: monitoring
+spec:
+  hosts:
+    - "kiali.pheonix.live"
+  gateways:
+    - istio-ingress/main-gateway
+  http:
+  # 1. Redirect HTTP to HTTPS
+  - match:
+    - uri:
+        prefix: /
+      port: 80
+    redirect:
+      scheme: https
+      port: 443
+  
+  # 2. Route HTTPS traffic to Kiali Service
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        # Default Kiali service name
+        host: kiali.monitoring.svc.cluster.local 
+        port:
+          number: 20001 # The port Kiali is configured to listen on

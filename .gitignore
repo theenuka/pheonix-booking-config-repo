@@ -1,0 +1,28 @@
+# Kustomize and Build Output
+/kustomize-build/
+/manifests/
+kustomization.out
+*.yaml.tmp
+*.patch.orig
+
+# Helm Charts and Packages
+*.tgz
+*.tar.gz
+
+# Secrets and Local Tooling
+secrets.yaml
+*.secret
+*-unsealed.yaml
+*.decrypted.yaml
+vault_token.txt
+temp_tokens.txt
+
+# IDE and OS Files
+.DS_Store
+.vscode/
+*~
+kubeconfig
+
+# Terraform/Pulumi (if used for bootstrapping)
+.terraform/
+*.tfstate

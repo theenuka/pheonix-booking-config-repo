@@ -1,0 +1,21 @@
+apiVersion: external-secrets.io/v1
+kind: ClusterSecretStore
+metadata:
+  name: vault-cluster-store # This is the name your ExternalSecret MUST reference
+spec:
+  provider:
+    vault:
+      # Use the internal Kubernetes DNS name for your Vault service
+      server: http://platform-vault-internal.vault.svc.cluster.local:8200
+      
+      auth:
+        kubernetes:
+          mountPath: kubernetes
+          # The dedicated ServiceAccount created for authentication
+          serviceAccountRef:
+            name: eso-vault-auth      
+            namespace: platform-system # Location where the ServiceAccount lives
+          # The Vault Role that binds the SA to the 'eso-admin-policy'
+          role: eso-role 
+      
+      # Required since Vault is running over HTTP internally (TLS terminated at Istio)

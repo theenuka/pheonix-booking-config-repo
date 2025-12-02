@@ -1,0 +1,34 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: user-service-jwt-required
+  namespace: phoenix-staging
+spec:
+  selector:
+    matchLabels:
+      app: user-service
+  action: ALLOW
+  rules:
+  
+  # 1. ADMIN ACCESS (GET /api/user/* - e.g., viewing all users)
+  # This rule requires the token to have the specific 'admin' role claim.
+  - from:
+    - source:
+        requestPrincipals: ["*"] # Must be authenticated
+    to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/api/user/*"]
+    when:
+    - key: request.auth.claims[roles]
+      values: ["admin"] # Assuming your IdP places roles in a 'roles' claim
+      
+  # 2. SELF-SERVICE ACCESS (GET/POST /api/user/:id - The App performs the final 'id == sub' check)
+  - from:
+    - source:
+        requestPrincipals: ["*"] # Must be authenticated (any valid user)
+    to:
+    - operation:
+        methods: ["GET", "POST"]
+        # Allow any authenticated user to hit the specific resource path
+        paths: ["/api/user/*"]

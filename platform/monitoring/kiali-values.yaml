@@ -1,0 +1,34 @@
+# path: platform/monitoring/kiali-values.yaml
+
+# 1. External Access Configuration
+external_services:
+  custom_dashboards:
+    enabled: true
+  prometheus:
+    # CRITICAL: Point Kiali to your running Prometheus service FQDN
+    url: http://monitoring-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090
+
+  grafana:
+    url: http://monitoring-stack-grafana:80
+
+# 2. Authentication (Use standard token auth)
+auth:
+  strategy: token # Recommended for production clusters
+  session:
+    idleTimeout: 300 # 5 minutes
+
+# 3. Kiali Server Configuration
+server:
+  web_fqdn: kiali.pheonix.live
+  web_port: 20001
+  identity_service:
+    address: 'https://kubernetes.default.svc:443'
+  port: 20001
+  log_level: info
+
+# 4. Resource Allocation
+deployment:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi

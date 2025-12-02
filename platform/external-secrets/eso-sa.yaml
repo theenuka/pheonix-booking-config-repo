@@ -1,0 +1,6 @@
+# Example: platform/namespaces/eso-sa.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: eso-vault-auth # Use a unique name for this purpose
+  namespace: platform-system # Or platform-system

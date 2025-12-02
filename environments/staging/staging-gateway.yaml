@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: staging-gateway
+  namespace: istio-ingress # Gateway should live where the ingress controller lives
+spec:
+  selector:
+    istio: ingress # Targets the shared Istio ingress pods
+  servers:
+  - port:
+      number: 80
+      name: http-staging
+      protocol: HTTP
+    hosts:
+      - "pheonix-staging.pheonix.live"
+    tls:
+      httpsRedirect: true # Redirect all HTTP to HTTPS
+  - port:
+      number: 443
+      name: https-staging
+      protocol: HTTPS
+    hosts:
+      - "pheonix-staging.pheonix.live"
+    tls:
+      mode: SIMPLE
+      credentialName: pheonix-live-tls # Uses your existing wildcard certificate

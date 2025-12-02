@@ -1,0 +1,26 @@
+opensearchAccount:
+  secret: "opensearch-admin-secret"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+data_source:
+  enabled: true
+
+workspace:
+  enabled: true
+
+explore:
+  enabled: true
+
+extraEnvs:
+  - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: opensearch-admin-secret
+        key: password

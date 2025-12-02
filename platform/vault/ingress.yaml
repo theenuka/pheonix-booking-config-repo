@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: vault-vs
+  namespace: vault
+spec:
+  hosts:
+  - vault.pheonix.live
+  gateways:
+  - istio-ingress/main-gateway
+  http:
+  # No matchers needed for redirects anymore.
+  # Just route traffic to the Vault UI.
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: platform-vault-ui.vault.svc.cluster.local
+        port:
+          number: 8200

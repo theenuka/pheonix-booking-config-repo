@@ -1,0 +1,22 @@
+# Defines default variables used in the template files
+
+image:
+  repository: registry.pheonix.live/phoenix-booking/user-service # Uses your new registry
+  tag: "v1.0.0"
+
+serviceAccount:
+  name: phoenix-booking-sa # CRITICAL: Service Account for Vault Auth
+
+service:
+  port: 8080 # Internal application port
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    cpu: "300m"
+    memory: "512Mi"
+
+ingress:
+  host: user-service.pheonix.live # External domain for routing

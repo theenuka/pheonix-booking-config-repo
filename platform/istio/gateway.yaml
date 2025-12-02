@@ -1,0 +1,30 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: main-gateway
+  namespace: istio-ingress
+spec:
+  selector:
+    istio: ingress
+  servers:
+  # Port 80: Global Redirect
+  # Since DNS-01 handles validation, we can safely redirect EVERYTHING to HTTPS.
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+    tls:
+      httpsRedirect: true
+
+  # Port 443: Secure Traffic (Wildcard)
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "*.pheonix.live"
+    tls:
+      mode: SIMPLE
+      credentialName: pheonix-live-tls  # Uses your new wildcard cert

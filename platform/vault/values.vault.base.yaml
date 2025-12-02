@@ -1,0 +1,81 @@
+# -----------------------------------------------------------------
+# GLOBAL SETTINGS
+# -----------------------------------------------------------------
+ui:
+  enabled: true
+injector:
+  enabled: true
+metrics:
+  enabled: false
+
+# -----------------------------------------------------------------
+# SERVER CONFIGURATION
+# -----------------------------------------------------------------
+server:
+  image:
+    repository: hashicorp/vault
+    tag: "1.20.4"
+  
+    
+  resources:
+    requests:
+      cpu: "25m"
+      memory: "128Mi"
+    limits:
+      cpu: "250m"
+      memory: "512Mi"
+  
+  # 1. STORAGE
+  dataStorage:
+    enabled: true
+    size: 10Gi
+    storageClass: "gp2"
+    accessMode: ReadWriteOnce
+  
+  # 2. SECRETS MAPPING
+  extraSecretEnvironmentVars:
+    - envName: AWS_ACCESS_KEY_ID
+      secretName: aws-kms-creds
+      secretKey: accessKeyID
+    - envName: AWS_SECRET_ACCESS_KEY
+      secretName: aws-kms-creds
+      secretKey: secretAccessKey
+    - envName: AWS_REGION
+      secretName: aws-kms-creds
+      secretKey: region
+    - envName: VAULT_AWSKMS_SEAL_KEY_ID
+      secretName: aws-kms-creds
+      secretKey: kmsKeyId
+  
+  # 3. HIGH AVAILABILITY
+  ha:
+    enabled: true
+    replicas: 2 
+    raft:
+      enabled: true
+      setNodeId: true
+
+      config: |
+        ui = true
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+        storage "raft" {
+          path = "/vault/data"
+          
+          retry_join {
+            leader_api_addr = "http://platform-vault-0.platform-vault-internal:8200"
+          }
+          retry_join {
+            leader_api_addr = "http://platform-vault-1.platform-vault-internal:8200"
+          }
+          retry_join {
+            leader_api_addr = "http://platform-vault-2.platform-vault-internal:8200"
+          }
+        }
+        service_registration "kubernetes" {}
+        seal "awskms" {
+        }
+

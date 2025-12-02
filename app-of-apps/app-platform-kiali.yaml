@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kiali-dashboard
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4" # Runs alongside Istiod and Prometheus stack
+spec:
+  project: default
+  sources:
+    # 1. Git Repo (Value Provider + Manifest Deployer)
+    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
+      targetRevision: main
+      ref: values
+      path: platform/monitoring
+      directory:
+        include: 'kiali-ingress.yaml' # Deploy the VS
+        
+    # 2. Helm Chart (Kiali)
+    - repoURL: https://kiali.org/helm-charts
+      targetRevision: 2.19.0 # Pin a stable version
+      chart: kiali-server
+      helm:
+        valueFiles:
+          - $values/platform/monitoring/kiali-values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false

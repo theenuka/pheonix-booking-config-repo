@@ -1,0 +1,16 @@
+global:
+  istioNamespace: istio-system
+
+pilot:
+  autoscaleEnabled: true
+  autoscaleMin: 1
+  autoscaleMax: 5
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+# Enable the mesh configuration
+meshConfig:
+  accessLogFile: /dev/stdout  # Useful for debugging traffic
+  enablePrometheusMerge: true

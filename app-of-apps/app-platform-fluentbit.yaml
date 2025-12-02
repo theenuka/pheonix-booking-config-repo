@@ -1,0 +1,34 @@
+# path: platform/logging/fluentbit-app.yaml
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fluentbit
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "6" # Runs after all other infrastructure (OpenSearch is Wave 4/5)
+spec:
+  project: default
+  sources:
+    # SOURCE 1: Git Repository (Value Provider)
+    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
+      targetRevision: main
+      ref: values
+      
+    # SOURCE 2: Helm Chart (Fluent Bit)
+    - repoURL: https://fluent.github.io/helm-charts
+      targetRevision: 0.54.0 # Use a stable version
+      chart: fluent-bit
+      helm:
+        valueFiles:
+          - $values/platform/logging/fluentbit-values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring # Deploy Fluent Bit into the 'monitoring' namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false

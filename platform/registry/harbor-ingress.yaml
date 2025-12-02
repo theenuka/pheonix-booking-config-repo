@@ -1,0 +1,39 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: harbor-vs
+  namespace: harbor 
+spec:
+  hosts:
+    - "registry.pheonix.live" 
+  gateways:
+    - istio-ingress/main-gateway
+  http:
+  
+  # 1. API PATHS (Highest Priority - MUST be defined first)
+  # Routes standard Docker CLI commands and Harbor core API calls to the core/registry.
+  - match:
+    - uri:
+        prefix: /v2/
+    - uri:
+        prefix: /api/
+    - uri:
+        prefix: /service/
+    - uri:
+        prefix: /c/
+    route:
+    - destination:
+        host: harbor-core.harbor.svc.cluster.local
+        port:
+          number: 80 # Route to the internal harbor-core service
+
+  # 2. UI PATH (Lowest Priority - Catch-all)
+  # Routes all other traffic (like hitting the root domain /) to the UI.
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: harbor-portal.harbor.svc.cluster.local
+        port:
+          number: 80 # Route to the internal harbor-portal service

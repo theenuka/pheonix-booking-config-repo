@@ -1,0 +1,24 @@
+clusterName: opensearch-cluster
+
+persistence:
+  enabled: true
+  storageClass: "gp2" # AWS EBS storage class
+  size: 10Gi 
+  
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+
+extraEnvs:
+  - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: opensearch-admin-secret # Name of the K8s Secret created by ESO
+        key: password                   # Key where ESO stores the password (as per ESO config)
+
+ 
+

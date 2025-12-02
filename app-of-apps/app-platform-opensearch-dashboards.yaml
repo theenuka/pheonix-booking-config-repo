@@ -1,0 +1,39 @@
+# path: platform/logging/opensearch-dashboards-app.yaml
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opensearch-dashboards
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5" # Waits for OpenSearch Cluster (Wave 4)
+spec:
+  project: default
+  
+  sources:
+    # SOURCE 1: Git Repository (The Values Provider & Manifest Deployer)
+    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
+      targetRevision: main
+      ref: values
+      path: platform/logging
+      directory:
+        # Deploys the VirtualService along with the Helm chart deployment
+        include: 'opensearch-ingress.yaml' 
+        
+    # SOURCE 2: Helm Chart (The Dashboards Chart)
+    - repoURL: https://opensearch-project.github.io/helm-charts/
+      targetRevision: 3.3.0
+      chart: opensearch-dashboards # <--- The separate UI chart
+      helm:
+        valueFiles:
+          - $values/platform/logging/opensearch-dashboards-values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: opensearch
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false # Namespace already created by OpenSearch Cluster App

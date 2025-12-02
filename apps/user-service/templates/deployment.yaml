@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  labels:
+    app: user-service
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+      annotations:
+        # ----------------------------------------------------
+        # VAULT AGENT INJECTOR ANNOTATIONS
+        # ----------------------------------------------------
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "user-role" # Binds to the Role created in Vault
+        vault.hashicorp.com/secret-volume-path: "/vault/secrets"
+        
+        # Define the Secret Path and target file (db-creds.env)
+        vault.hashicorp.com/agent-inject-secret-db-creds.env: "secret/data/user-service/database"
+        
+        # Define the template for the secret file content
+        vault.hashicorp.com/agent-inject-template-db-creds.env: |
+          {{- with secret "secret/data/user-service/database" }}
+          SPRING_DATASOURCE_USERNAME="{{ .Data.data.username }}"
+          SPRING_DATASOURCE_PASSWORD="{{ .Data.data.password }}"
+          DB_HOST="{{ .Data.data.host }}"
+          {{- end }}
+        
+        # ----------------------------------------------------
+        # ISTIO / GENERAL ANNOTATIONS
+        # ----------------------------------------------------
+        prometheus.io/scrape: "true" # Enables Prometheus scraping via Istio sidecar
+        prometheus.io/port: "8080"
+        
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+      - name: user-service
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        resources:
+          {{ toYaml .Values.resources | nindent 12 }}
+        ports:
+        - containerPort: {{ .Values.service.port }}
