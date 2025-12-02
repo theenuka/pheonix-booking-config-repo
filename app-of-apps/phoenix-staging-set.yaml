@@ -7,7 +7,7 @@ spec:
   # 1. Generator: Find all service directories under 'apps/'
   generators:
   - git:
-      repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
+      repoURL: 'https://github.com/theenuka/pheonix-booking-config-repo.git'
       revision: main
       directories:
       - path: apps/* # Discovers all folders (e.g., user-service, payment-service)
@@ -27,14 +27,14 @@ spec:
 
       sources:
         # Source 1: The Git Repo (Value Provider) - Required for $values references
-        - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
-          targetRevision: main
+        - repoURL: 'https://github.com/theenuka/pheonix-booking-config-repo.git'
+          revision: main
           ref: values
         
         # Source 2: The Base Helm Chart (The Application Code)
         # The 'path' points to the specific service folder found by the generator.
-        - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
-          targetRevision: main
+        - repoURL: 'https://github.com/theenuka/pheonix-booking-config-repo.git'
+          revision: main
           path: '{{path}}' # e.g., apps/user-service
           helm:
             # CRITICAL: Define the loading order for environment overrides
