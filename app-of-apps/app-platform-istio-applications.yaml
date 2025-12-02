@@ -13,14 +13,14 @@ spec:
   sources:
     - repoURL: https://istio-release.storage.googleapis.com/charts
       chart: base
-      targetRevision: 1.28.0  # Pin your version
+      targetRevision: 1.28.0
       helm:
         valueFiles:
           - $values/platform/istio/values.base.yaml
           - $values/platform/istio/values.istiod.yaml
           - $values/platform/istio/values.gateway.yaml
-    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
-      targetRevision: main
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
       ref: values
   
   destination:
@@ -48,8 +48,8 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
-      targetRevision: main
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
       ref: values
     - repoURL: https://istio-release.storage.googleapis.com/charts
       chart: istiod
@@ -81,8 +81,8 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
-      targetRevision: main
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
       ref: values
 
     - repoURL: https://istio-release.storage.googleapis.com/charts
@@ -92,8 +92,8 @@ spec:
         valueFiles:
           - $values/platform/istio/values.gateway.yaml
 
-    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
-      targetRevision: main
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
       path: platform/istio
       directory:
         include: '{certificate.yaml,gateway.yaml,jwt-validation-policy.yaml}'

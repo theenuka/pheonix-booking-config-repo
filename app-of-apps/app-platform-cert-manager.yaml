@@ -7,30 +7,29 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   project: default
-  # CORRECTED: Using 'sources' (plural) to combine Helm Chart + Git Values
   sources:
     # 1. The Helm Chart from Jetstack
     - repoURL: https://charts.jetstack.io
       chart: cert-manager
-      targetRevision: "1.19.1"  # ✅ Confirmed correct version
+      targetRevision: "1.19.1"
       helm:
         valueFiles:
-          # References the 'values' source below
           - $values/platform/cert-manager/values.cert-manager.yaml
     
     # 2. Your Git Repo (for the values file)
-    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git' # Fixed spelling "Pheonix" -> "Phoenix"
-      targetRevision: main
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
       ref: values
 
-    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git' # Fixed spelling "Pheonix" -> "Phoenix"
-      targetRevision: main
+    # 3. Your Git Repo (for ClusterIssuer)
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
       path: platform/cert-manager
       directory:
         include: 'cluster-issuer.yaml'
 
   destination:
-    server: 'https://kubernetes.default.svc'
+    server: https://kubernetes.default.svc
     namespace: cert-manager
   syncPolicy:
     automated:

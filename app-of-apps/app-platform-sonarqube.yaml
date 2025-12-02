@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-    targetRevision: main
+    targetRevision: master
     path: platform/sonarqube
   destination:
     server: https://kubernetes.default.svc

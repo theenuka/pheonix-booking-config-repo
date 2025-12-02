@@ -4,7 +4,6 @@ metadata:
   name: monitoring-stack
   namespace: argocd
   annotations:
-    # Wave 3 runs alongside Istio/Vault
     argocd.argoproj.io/sync-wave: "3"
 spec:
   project: default
@@ -13,15 +12,19 @@ spec:
     # 1. The Official Prometheus Community Chart
     - repoURL: https://prometheus-community.github.io/helm-charts
       chart: kube-prometheus-stack
-      targetRevision: 79.7.1  # Pin a stable version
+      targetRevision: 79.7.1
       helm:
         valueFiles:
           - $values/platform/monitoring/values.yaml
 
-    # 2. Your Repo (For Values + VirtualService)
-    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
-      targetRevision: main
+    # 2. Your Repo (For Values)
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
       ref: values
+
+    # 3. Your Repo (For Manifests)
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
       path: platform/monitoring
       directory:
         include: '{ingress.yaml,grafana-allow-policy.yaml}'
