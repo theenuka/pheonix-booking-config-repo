@@ -30,41 +30,41 @@ spec:
         runAsGroup: 101
         runAsNonRoot: true
       containers:
-      - name: frontend
-        image: ttl.sh/phoenix-hotel-frontend-v1:2h
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 4173   # <--- CHANGED FROM 80
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 4173
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 4173
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        volumeMounts:
-        - name: asgardeo-runtime-config
-          mountPath: /usr/share/nginx/html/runtime-config.js
-          subPath: runtime-config.js
+        - name: frontend
+          image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-frontend-service:99acda0e49460f5ea9d1f69d92a8d6bd9f04510b
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4173 # <--- CHANGED FROM 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 4173
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 4173
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          volumeMounts:
+            - name: asgardeo-runtime-config
+              mountPath: /usr/share/nginx/html/runtime-config.js
+              subPath: runtime-config.js
       volumes:
-      - name: asgardeo-runtime-config
-        configMap:
-          name: asgardeo-config
-          items:
-          - key: runtime-config.js
-            path: runtime-config.js
+        - name: asgardeo-runtime-config
+          configMap:
+            name: asgardeo-config
+            items:
+              - key: runtime-config.js
+                path: runtime-config.js
 ---
 apiVersion: v1
 kind: Service
@@ -78,9 +78,11 @@ spec:
   selector:
     app: frontend
   ports:
-  - port: 80            # Keep this 80 (Internal Cluster Port)
-    targetPort: 4173    # <--- CHANGED: Connect to the container on 4173
-
+    - port: 80 # Keep this 80 (Internal Cluster Port)
+      targetPort: 4173 # <--- CHANGED: Connect to the container on 4173
+  template:
+    spec:
+      containers: []
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -95,9 +97,12 @@ spec:
   minReplicas: 1
   maxReplicas: 5
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 60
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
+  template:
+    spec:
+      containers: []
