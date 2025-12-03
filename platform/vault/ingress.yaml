@@ -1,21 +1,22 @@
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: vault-vs
+  name: vault-ingress
   namespace: vault
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/subnets: subnet-0a6bf732901bb35e8, subnet-066b28455fe0a88d1
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
 spec:
-  hosts:
-  - vault.pheonix.live
-  gateways:
-  - istio-ingress/main-gateway
-  http:
-  # No matchers needed for redirects anymore.
-  # Just route traffic to the Vault UI.
-  - match:
-    - uri:
-        prefix: /
-    route:
-    - destination:
-        host: platform-vault-ui.vault.svc.cluster.local
-        port:
-          number: 8200
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: platform-vault-ui
+                port:
+                  number: 8200

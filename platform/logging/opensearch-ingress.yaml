@@ -1,32 +1,24 @@
 # platform/logging/opensearch-ingress.yaml
 
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: opensearch-dashboards-vs
+  name: opensearch-dashboards-ingress
   namespace: opensearch
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/subnets: subnet-0a6bf732901bb35e8, subnet-066b28455fe0a88d1
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
 spec:
-  hosts:
-    - "opensearch.pheonix.live" 
-  gateways:
-    - istio-ingress/main-gateway # Assumed namespace based on previous fix
-  http:
-  
-  # 1. HTTP to HTTPS Redirect (Port 80)
-  - match:
-    - uri:
-        prefix: /
-      port: 80
-    redirect:
-      scheme: https
-      port: 443
-  
-  # 2. Secure Routing to Dashboards (Port 443)
-  - match:
-    - uri:
-        prefix: /
-    route:
-    - destination:
-        host: opensearch-dashboards.opensearch.svc.cluster.local 
-        port:
-          number: 5601
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: opensearch-dashboards
+                port:
+                  number: 5601

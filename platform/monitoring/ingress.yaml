@@ -1,20 +1,22 @@
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: grafana-vs
+  name: grafana-ingress
   namespace: monitoring
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/subnets: subnet-0a6bf732901bb35e8, subnet-066b28455fe0a88d1
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
 spec:
-  hosts:
-  - grafana.pheonix.live
-  gateways:
-  - istio-ingress/main-gateway
-  http:
-  - match:
-    - uri:
-        prefix: /
-    route:
-    - destination:
-        # The service name usually follows: <release-name>-grafana
-        host: monitoring-stack-grafana.monitoring.svc.cluster.local
-        port:
-          number: 80
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitoring-stack-grafana
+                port:
+                  number: 80
