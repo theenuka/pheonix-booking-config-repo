@@ -29,6 +29,8 @@ spec:
         runAsUser: 101
         runAsGroup: 101
         runAsNonRoot: true
+      imagePullSecrets:
+        - name: regcred
       containers:
         - name: frontend
           image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-frontend-service:5c0c469477dd00897e0b19c4816eabe304c63634
