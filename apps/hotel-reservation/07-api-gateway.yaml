@@ -31,7 +31,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: api-gateway
-          image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-api-gateway-service:99acda0e49460f5ea9d1f69d92a8d6bd9f04510b
+          image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-api-gateway-service:035ca6bc3a93a6973ecf9d17db83ea935385820d
           ports:
             - containerPort: 7008
           resources:
