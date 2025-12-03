@@ -31,7 +31,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: search-service
-          image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-search-service:f10391d0474670ac507f8bd7385178effa4b8147
+          image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-search-service:5a960badd374e01bced430311978d97f155104f2
           ports:
             - containerPort: 7105
           resources:
