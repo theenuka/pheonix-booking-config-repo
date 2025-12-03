@@ -27,7 +27,7 @@ spec:
       targetRevision: master
       path: platform/monitoring
       directory:
-        include: '{ingress.yaml,grafana-allow-policy.yaml}'
+        include: 'grafana-allow-policy.yaml'
 
   destination:
     server: https://kubernetes.default.svc

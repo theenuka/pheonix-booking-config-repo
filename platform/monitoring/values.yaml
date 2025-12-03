@@ -5,6 +5,18 @@ grafana:
   enabled: true
   adminPassword: "admin"  # Change this on first login!
   
+  ingress:
+    enabled: true
+    ingressClassName: alb
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/subnets: subnet-0a6bf732901bb35e8, subnet-066b28455fe0a88d1
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    hosts:
+      - "*"
+    path: /
+
   # Persistence (Save Dashboards/Users)
   persistence:
     enabled: true
