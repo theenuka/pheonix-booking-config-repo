@@ -31,7 +31,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: booking-service
-          image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-booking-service:dea7c76e5af227a5e121946fa9bee23711b3db8e
+          image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-booking-service:f10391d0474670ac507f8bd7385178effa4b8147
           ports:
             - containerPort: 7104
           resources:
