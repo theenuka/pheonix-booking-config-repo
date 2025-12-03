@@ -30,34 +30,34 @@ spec:
         fsGroup: 2000
         runAsNonRoot: true
       containers:
-      - name: notification-service
-        image: ttl.sh/phoenix-hotel-notification-service-v1:2h
-        ports:
-        - containerPort: 7101
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          tcpSocket:
-            port: 7101
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          tcpSocket:
-            port: 7101
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        env:
-        - name: OTEL_EXPORTER_OTLP_ENDPOINT
-          value: http://otel-collector.observability:4317
-        - name: OTEL_SERVICE_NAME
-          value: notification-service
-        - name: OTEL_RESOURCE_ATTRIBUTES
-          value: service.namespace=phoenix-app,service.name=notification-service,deployment.environment=prod
+        - name: notification-service
+          image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-notification-service:f10391d0474670ac507f8bd7385178effa4b8147
+          ports:
+            - containerPort: 7101
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            tcpSocket:
+              port: 7101
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            tcpSocket:
+              port: 7101
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://otel-collector.observability:4317
+            - name: OTEL_SERVICE_NAME
+              value: notification-service
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.namespace=phoenix-app,service.name=notification-service,deployment.environment=prod
 ---
 apiVersion: v1
 kind: Service
@@ -70,9 +70,11 @@ spec:
   selector:
     app: notification-service
   ports:
-  - port: 80
-    targetPort: 7101
-
+    - port: 80
+      targetPort: 7101
+  template:
+    spec:
+      containers: []
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -87,9 +89,12 @@ spec:
   minReplicas: 1
   maxReplicas: 5
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+  template:
+    spec:
+      containers: []
