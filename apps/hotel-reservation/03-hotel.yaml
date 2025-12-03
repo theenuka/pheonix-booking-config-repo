@@ -30,38 +30,38 @@ spec:
         fsGroup: 2000
         runAsNonRoot: true
       containers:
-      - name: hotel-service
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          tcpSocket:
-            port: 7103
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          tcpSocket:
-            port: 7103
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        image: ttl.sh/phoenix-hotel-hotel-service-v1:2h
-        ports:
-        - containerPort: 7103
-        envFrom:
-        - configMapRef:
-            name: asgardeo-config
-        - name: OTEL_EXPORTER_OTLP_ENDPOINT
-          value: http://otel-collector.observability:4317
-        - name: OTEL_SERVICE_NAME
-          value: hotel-service
-        - name: OTEL_RESOURCE_ATTRIBUTES
-          value: service.namespace=phoenix-app,service.name=hotel-service,deployment.environment=prod
-        - name: MONGODB_CONNECTION_STRING
-          value: "mongodb://mongodb:27017/hotel-booking"
+        - name: hotel-service
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            tcpSocket:
+              port: 7103
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            tcpSocket:
+              port: 7103
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-hotel-service:99acda0e49460f5ea9d1f69d92a8d6bd9f04510b
+          ports:
+            - containerPort: 7103
+          envFrom:
+            - configMapRef:
+                name: asgardeo-config
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://otel-collector.observability:4317
+            - name: OTEL_SERVICE_NAME
+              value: hotel-service
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.namespace=phoenix-app,service.name=hotel-service,deployment.environment=prod
+            - name: MONGODB_CONNECTION_STRING
+              value: "mongodb://mongodb:27017/hotel-booking"
 ---
 apiVersion: v1
 kind: Service
@@ -74,10 +74,12 @@ spec:
   selector:
     app: hotel-service
   ports:
-  - name: http
-    port: 80
-    targetPort: 7103
-
+    - name: http
+      port: 80
+      targetPort: 7103
+  template:
+    spec:
+      containers: []
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -92,9 +94,12 @@ spec:
   minReplicas: 1
   maxReplicas: 5
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+  template:
+    spec:
+      containers: []
