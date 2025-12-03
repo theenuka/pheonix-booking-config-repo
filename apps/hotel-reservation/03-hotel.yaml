@@ -12,6 +12,9 @@ spec:
     matchLabels:
       app: hotel-service
   template:
+    metadata:
+      labels:
+        app: hotel-service
         app.kubernetes.io/name: hotel-service
         app.kubernetes.io/part-of: hotel-reservation
       annotations:
@@ -20,15 +23,12 @@ spec:
         prometheus.io/port: "7103"
         prometheus.io/path: "/metrics"
         fluentbit.io/parser: json
-    metadata:
+    spec:
       securityContext:
         runAsUser: 1000
         runAsGroup: 3000
         fsGroup: 2000
         runAsNonRoot: true
-      labels:
-        app: hotel-service
-    spec:
       containers:
       - name: hotel-service
         resources:
