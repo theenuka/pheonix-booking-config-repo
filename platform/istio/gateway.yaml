@@ -7,16 +7,15 @@ spec:
   selector:
     istio: ingress
   servers:
-  # Port 80: Global Redirect
-  # Since DNS-01 handles validation, we can safely redirect EVERYTHING to HTTPS.
+  # Port 80: HTTP Traffic
   - port:
       number: 80
       name: http
       protocol: HTTP
     hosts:
     - "*"
-    tls:
-      httpsRedirect: true
+    # tls:
+    #   httpsRedirect: true
 
   # Port 443: Secure Traffic (Wildcard)
   - port:
