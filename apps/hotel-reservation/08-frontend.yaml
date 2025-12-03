@@ -31,7 +31,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: frontend
-          image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-frontend-service:035ca6bc3a93a6973ecf9d17db83ea935385820d
+          image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-frontend-service:dea7c76e5af227a5e121946fa9bee23711b3db8e
           imagePullPolicy: Always
           ports:
             - containerPort: 4173 # <--- CHANGED FROM 80
