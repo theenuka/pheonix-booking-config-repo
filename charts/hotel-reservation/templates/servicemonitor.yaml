@@ -1,0 +1,35 @@
+{{- if .Values.serviceMonitor.enabled }}
+{{- range $name, $svc := .Values.services }}
+{{- $svcPort := default $svc.containerPort $svc.service.port }}
+{{- $annotations := $svc.annotations | default dict }}
+{{- if hasKey $annotations "prometheus.io/port" }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $svc.name }}
+  namespace: {{ $.Values.global.namespace }}
+  labels:
+    app: {{ $svc.name }}
+    app.kubernetes.io/name: {{ $svc.name }}
+    app.kubernetes.io/part-of: {{ $.Values.global.partOf }}
+{{- range $k, $v := $.Values.serviceMonitor.labels }}
+    {{ $k }}: {{ $v | quote }}
+{{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ $svc.name }}
+  namespaceSelector:
+    matchNames:
+      - {{ $.Values.global.namespace }}
+  endpoints:
+    - port: {{ default "http" $svc.service.portName | quote }}
+      interval: {{ $.Values.serviceMonitor.scrapeInterval }}
+      honorLabels: true
+{{- if $svc.serviceMonitor }}
+{{ toYaml $svc.serviceMonitor | indent 6 }}
+{{- end }}
+---
+{{- end }}
+{{- end }}
+{{- end }}

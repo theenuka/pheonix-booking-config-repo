@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: api-gateway
   namespace: phoenix-app
+  labels:
+    app.kubernetes.io/name: api-gateway
+    app.kubernetes.io/part-of: hotel-reservation
 spec:
   replicas: 1
   selector:
@@ -12,12 +15,42 @@ spec:
     metadata:
       labels:
         app: api-gateway
+        app.kubernetes.io/name: api-gateway
+        app.kubernetes.io/part-of: hotel-reservation
+      annotations:
+        sidecar.istio.io/inject: "true"
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "7008"
+        prometheus.io/path: "/metrics"
+        fluentbit.io/parser: json
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+        runAsNonRoot: true
       containers:
       - name: api-gateway
         image: ttl.sh/phoenix-hotel-api-gateway-v1:2h
         ports:
         - containerPort: 7008
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "150m"
+          limits:
+            memory: "768Mi"
+            cpu: "700m"
+        livenessProbe:
+          tcpSocket:
+            port: 7008
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 7008
+          initialDelaySeconds: 5
+          periodSeconds: 10
         envFrom:
         - configMapRef:
             name: asgardeo-config
@@ -32,17 +65,45 @@ spec:
           value: "http://search-service"
         - name: JWT_SECRET_KEY
           value: "my-super-secret-key-change-this-later"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: http://otel-collector.observability:4317
+        - name: OTEL_SERVICE_NAME
+          value: api-gateway
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: service.namespace=phoenix-app,service.name=api-gateway,deployment.environment=prod
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: api-gateway
   namespace: phoenix-app
+  labels:
+    app: api-gateway
 spec:
-  type: NodePort  # <--- Exposed to outside
+  type: ClusterIP
   selector:
     app: api-gateway
   ports:
   - port: 7008
     targetPort: 7008
-    nodePort: 30000  # <--- Access via http://MASTER_IP:30000/api/...
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-gateway
+  namespace: phoenix-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-gateway
+  minReplicas: 1
+  maxReplicas: 6
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 65

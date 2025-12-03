@@ -1,0 +1,7 @@
+apiVersion: v2
+name: hotel-reservation
+description: Helm chart for the Phoenix hotel reservation platform
+kubeVersion: ">=1.26.0"
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

@@ -1,6 +1,6 @@
 service:
-  # This triggers DigitalOcean to provision a Public IP
-  type: LoadBalancer 
+  # Changed to ClusterIP for ALB Ingress
+  type: ClusterIP
   ports:
   - name: status-port
     port: 15021

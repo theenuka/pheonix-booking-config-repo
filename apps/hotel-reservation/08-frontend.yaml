@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: frontend
   namespace: phoenix-app
+  labels:
+    app.kubernetes.io/name: frontend
+    app.kubernetes.io/part-of: hotel-reservation
 spec:
   replicas: 1
   selector:
@@ -12,13 +15,45 @@ spec:
     metadata:
       labels:
         app: frontend
+        app.kubernetes.io/name: frontend
+        app.kubernetes.io/part-of: hotel-reservation
+      annotations:
+        sidecar.istio.io/inject: "true"
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "4173"
+        prometheus.io/path: "/metrics"
+        fluentbit.io/parser: nginx
     spec:
+      securityContext:
+        fsGroup: 101
+        runAsUser: 101
+        runAsGroup: 101
+        runAsNonRoot: true
       containers:
       - name: frontend
         image: ttl.sh/phoenix-hotel-frontend-v1:2h
         imagePullPolicy: Always
         ports:
         - containerPort: 4173   # <--- CHANGED FROM 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 4173
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 4173
+          initialDelaySeconds: 5
+          periodSeconds: 10
         volumeMounts:
         - name: asgardeo-runtime-config
           mountPath: /usr/share/nginx/html/runtime-config.js
@@ -36,11 +71,33 @@ kind: Service
 metadata:
   name: frontend
   namespace: phoenix-app
+  labels:
+    app: frontend
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: frontend
   ports:
   - port: 80            # Keep this 80 (Internal Cluster Port)
     targetPort: 4173    # <--- CHANGED: Connect to the container on 4173
-    nodePort: 30001
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend
+  namespace: phoenix-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60

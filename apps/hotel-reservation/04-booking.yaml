@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: booking-service
   namespace: phoenix-app
+  labels:
+    app.kubernetes.io/name: booking-service
+    app.kubernetes.io/part-of: hotel-reservation
 spec:
   replicas: 1
   selector:
@@ -12,27 +15,86 @@ spec:
     metadata:
       labels:
         app: booking-service
+        app.kubernetes.io/name: booking-service
+        app.kubernetes.io/part-of: hotel-reservation
+      annotations:
+        sidecar.istio.io/inject: "true"
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "7104"
+        prometheus.io/path: "/metrics"
+        fluentbit.io/parser: json
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+        runAsNonRoot: true
       containers:
       - name: booking-service
         image: ttl.sh/phoenix-hotel-booking-service-v1:2h
         ports:
         - containerPort: 7104
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          tcpSocket:
+            port: 7104
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 7104
+          initialDelaySeconds: 5
+          periodSeconds: 10
         envFrom:
         - configMapRef:
             name: asgardeo-config
         env:
         - name: MONGODB_CONNECTION_STRING
           value: "mongodb://mongodb:27017/hotel-booking"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: http://otel-collector.observability:4317
+        - name: OTEL_SERVICE_NAME
+          value: booking-service
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: service.namespace=phoenix-app,service.name=booking-service,deployment.environment=prod
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: booking-service
   namespace: phoenix-app
+  labels:
+    app: booking-service
 spec:
   selector:
     app: booking-service
   ports:
   - port: 80
     targetPort: 7104
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: booking-service
+  namespace: phoenix-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: booking-service
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
