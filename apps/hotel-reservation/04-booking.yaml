@@ -13,11 +13,9 @@ spec:
       labels:
         app: booking-service
     spec:
-      imagePullSecrets:
-      - name: ecr-registry-secret
       containers:
       - name: booking-service
-        image: 787169320414.dkr.ecr.us-east-1.amazonaws.com/phoenix-booking-service:asgardeo-distfix-20251120
+        image: ttl.sh/phoenix-hotel-booking-service-v1:2h
         ports:
         - containerPort: 7104
         envFrom:

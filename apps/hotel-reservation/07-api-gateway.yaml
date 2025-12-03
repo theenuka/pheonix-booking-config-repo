@@ -13,11 +13,9 @@ spec:
       labels:
         app: api-gateway
     spec:
-      imagePullSecrets:
-      - name: ecr-registry-secret
       containers:
       - name: api-gateway
-        image: 787169320414.dkr.ecr.us-east-1.amazonaws.com/phoenix-api-gateway-service:asgardeo-distfix-20251120
+        image: ttl.sh/phoenix-hotel-api-gateway-v1:2h
         ports:
         - containerPort: 7008
         envFrom:

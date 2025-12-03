@@ -1,0 +1,173 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: build-frontend
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: kaniko
+        image: gcr.io/kaniko-project/executor:latest
+        args:
+        - "--dockerfile=/workspace/hotel-booking-frontend/Dockerfile"
+        - "--context=/workspace"
+        - "--destination=ttl.sh/phoenix-hotel-frontend-v1:2h"
+        volumeMounts:
+        - name: source-volume
+          mountPath: /workspace
+      restartPolicy: Never
+      volumes:
+      - name: source-volume
+        persistentVolumeClaim:
+          claimName: source-code-pvc
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: build-api-gateway
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: kaniko
+        image: gcr.io/kaniko-project/executor:latest
+        args:
+        - "--dockerfile=/workspace/backend/services/api-gateway/Dockerfile"
+        - "--context=/workspace"
+        - "--build-arg=SERVICE_PATH=backend/services/api-gateway"
+        - "--destination=ttl.sh/phoenix-hotel-api-gateway-v1:2h"
+        volumeMounts:
+        - name: source-volume
+          mountPath: /workspace
+      restartPolicy: Never
+      volumes:
+      - name: source-volume
+        persistentVolumeClaim:
+          claimName: source-code-pvc
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: build-booking-service
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: kaniko
+        image: gcr.io/kaniko-project/executor:latest
+        args:
+        - "--dockerfile=/workspace/backend/services/booking-service/Dockerfile"
+        - "--context=/workspace"
+        - "--build-arg=SERVICE_PATH=backend/services/booking-service"
+        - "--destination=ttl.sh/phoenix-hotel-booking-service-v1:2h"
+        volumeMounts:
+        - name: source-volume
+          mountPath: /workspace
+      restartPolicy: Never
+      volumes:
+      - name: source-volume
+        persistentVolumeClaim:
+          claimName: source-code-pvc
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: build-hotel-service
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: kaniko
+        image: gcr.io/kaniko-project/executor:latest
+        args:
+        - "--dockerfile=/workspace/backend/services/hotel-service/Dockerfile"
+        - "--context=/workspace"
+        - "--build-arg=SERVICE_PATH=backend/services/hotel-service"
+        - "--destination=ttl.sh/phoenix-hotel-hotel-service-v1:2h"
+        volumeMounts:
+        - name: source-volume
+          mountPath: /workspace
+      restartPolicy: Never
+      volumes:
+      - name: source-volume
+        persistentVolumeClaim:
+          claimName: source-code-pvc
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: build-identity-service
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: kaniko
+        image: gcr.io/kaniko-project/executor:latest
+        args:
+        - "--dockerfile=/workspace/backend/services/identity-service/Dockerfile"
+        - "--context=/workspace"
+        - "--build-arg=SERVICE_PATH=backend/services/identity-service"
+        - "--destination=ttl.sh/phoenix-hotel-identity-service-v1:2h"
+        volumeMounts:
+        - name: source-volume
+          mountPath: /workspace
+      restartPolicy: Never
+      volumes:
+      - name: source-volume
+        persistentVolumeClaim:
+          claimName: source-code-pvc
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: build-notification-service
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: kaniko
+        image: gcr.io/kaniko-project/executor:latest
+        args:
+        - "--dockerfile=/workspace/backend/services/notification-service/Dockerfile"
+        - "--context=/workspace"
+        - "--build-arg=SERVICE_PATH=backend/services/notification-service"
+        - "--destination=ttl.sh/phoenix-hotel-notification-service-v1:2h"
+        volumeMounts:
+        - name: source-volume
+          mountPath: /workspace
+      restartPolicy: Never
+      volumes:
+      - name: source-volume
+        persistentVolumeClaim:
+          claimName: source-code-pvc
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: build-search-service
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: kaniko
+        image: gcr.io/kaniko-project/executor:latest
+        args:
+        - "--dockerfile=/workspace/backend/services/search-service/Dockerfile"
+        - "--context=/workspace"
+        - "--build-arg=SERVICE_PATH=backend/services/search-service"
+        - "--destination=ttl.sh/phoenix-hotel-search-service-v1:2h"
+        volumeMounts:
+        - name: source-volume
+          mountPath: /workspace
+      restartPolicy: Never
+      volumes:
+      - name: source-volume
+        persistentVolumeClaim:
+          claimName: source-code-pvc

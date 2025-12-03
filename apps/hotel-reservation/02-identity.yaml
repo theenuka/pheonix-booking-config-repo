@@ -14,12 +14,10 @@ spec:
         app: identity-service
     spec:
       # This tells Kubernetes to use the secret key we created to log into ECR
-      imagePullSecrets:
-      - name: ecr-registry-secret
 
       containers:
       - name: identity-service
-        image: 787169320414.dkr.ecr.us-east-1.amazonaws.com/phoenix-identity-service:asgardeo-distfix-20251120
+        image: ttl.sh/phoenix-hotel-identity-service-v1:2h
         ports:
         - containerPort: 7102
         envFrom:

@@ -13,11 +13,9 @@ spec:
       labels:
         app: search-service
     spec:
-      imagePullSecrets:
-      - name: ecr-registry-secret
       containers:
       - name: search-service
-        image: 787169320414.dkr.ecr.us-east-1.amazonaws.com/phoenix-search-service
+        image: ttl.sh/phoenix-hotel-search-service-v1:2h
         ports:
         - containerPort: 7105
         env:

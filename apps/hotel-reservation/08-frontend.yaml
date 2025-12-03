@@ -13,11 +13,9 @@ spec:
       labels:
         app: frontend
     spec:
-      imagePullSecrets:
-      - name: ecr-registry-secret
       containers:
       - name: frontend
-        image: 787169320414.dkr.ecr.us-east-1.amazonaws.com/phoenix-frontend-service:latest
+        image: ttl.sh/phoenix-hotel-frontend-v1:2h
         imagePullPolicy: Always
         ports:
         - containerPort: 4173   # <--- CHANGED FROM 80

@@ -13,11 +13,9 @@ spec:
       labels:
         app: notification-service
     spec:
-      imagePullSecrets:
-      - name: ecr-registry-secret
       containers:
       - name: notification-service
-        image: 787169320414.dkr.ecr.us-east-1.amazonaws.com/phoenix-notification-service
+        image: ttl.sh/phoenix-hotel-notification-service-v1:2h
         ports:
         - containerPort: 7101
 ---
