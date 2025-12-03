@@ -11,8 +11,8 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
 spec:
   rules:
-    - host: sonar.pheonix.live
-      http:
+    # - host: sonar.pheonix.live
+    - http:
         paths:
           - path: /
             pathType: Prefix
