@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: phoenix-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      imagePullSecrets:
+      - name: ecr-registry-secret
+      containers:
+      - name: frontend
+        image: 787169320414.dkr.ecr.us-east-1.amazonaws.com/phoenix-frontend-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 4173   # <--- CHANGED FROM 80
+        volumeMounts:
+        - name: asgardeo-runtime-config
+          mountPath: /usr/share/nginx/html/runtime-config.js
+          subPath: runtime-config.js
+      volumes:
+      - name: asgardeo-runtime-config
+        configMap:
+          name: asgardeo-config
+          items:
+          - key: runtime-config.js
+            path: runtime-config.js
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: phoenix-app
+spec:
+  type: NodePort
+  selector:
+    app: frontend
+  ports:
+  - port: 80            # Keep this 80 (Internal Cluster Port)
+    targetPort: 4173    # <--- CHANGED: Connect to the container on 4173
+    nodePort: 30001

@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: asgardeo-config
+  namespace: phoenix-app
+data:
+  ASGARDEO_TENANT_DOMAIN: "theenukagranex"
+  ASGARDEO_CLIENT_ID: "iYcA_MO8LwTND_hvunAg8VvBHDua"
+  ASGARDEO_ORG_URL: "https://api.asgardeo.io/t/theenukagranex"
+  ASGARDEO_ISSUER: "https://api.asgardeo.io/t/theenukagranex/oauth2/token"
+  ASGARDEO_JWKS_URL: "https://api.asgardeo.io/t/theenukagranex/oauth2/jwks"
+  runtime-config.js: |
+    (function () {
+      console.log("Runtime config loading (Hardcoded)...");
+      
+      // Hardcoded for stability
+      const fixedOrigin = "http://phoenix-alb-1908878835.us-east-1.elb.amazonaws.com";
+
+      window.__ASGARDEO_CONFIG = {
+        signInRedirectURL: fixedOrigin + "/sign-in",
+        signOutRedirectURL: fixedOrigin + "/",
+        clientID: "iYcA_MO8LwTND_hvunAg8VvBHDua",
+        baseUrl: "https://api.asgardeo.io/t/theenukagranex",
+        scope: ["openid", "profile", "email"],
+        apiBaseUrl: fixedOrigin
+      };
+      console.log("Runtime config set:", window.__ASGARDEO_CONFIG);
+    })();

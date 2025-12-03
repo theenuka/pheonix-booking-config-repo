@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-service
+  namespace: phoenix-app
+spec:
+  replicas: 1  # We start with 1, can scale later
+  selector:
+    matchLabels:
+      app: identity-service
+  template:
+    metadata:
+      labels:
+        app: identity-service
+    spec:
+      # This tells Kubernetes to use the secret key we created to log into ECR
+      imagePullSecrets:
+      - name: ecr-registry-secret
+
+      containers:
+      - name: identity-service
+        image: 787169320414.dkr.ecr.us-east-1.amazonaws.com/phoenix-identity-service:asgardeo-distfix-20251120
+        ports:
+        - containerPort: 7102
+        envFrom:
+        - configMapRef:
+            name: asgardeo-config
+        env:
+        - name: MONGODB_CONNECTION_STRING
+          value: "mongodb://mongodb:27017/hotel-booking"
+        - name: JWT_SECRET_KEY
+          value: "my-super-secret-key-change-this-later"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity-service
+  namespace: phoenix-app
+spec:
+  selector:
+    app: identity-service
+  ports:
+  - port: 80    # Inside the cluster, we talk to port 80
+    targetPort: 7102 # The container listens on 7102

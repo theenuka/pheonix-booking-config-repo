@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  namespace: phoenix-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      imagePullSecrets:
+      - name: ecr-registry-secret
+      containers:
+      - name: notification-service
+        image: 787169320414.dkr.ecr.us-east-1.amazonaws.com/phoenix-notification-service
+        ports:
+        - containerPort: 7101
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  namespace: phoenix-app
+spec:
+  selector:
+    app: notification-service
+  ports:
+  - port: 80
+    targetPort: 7101

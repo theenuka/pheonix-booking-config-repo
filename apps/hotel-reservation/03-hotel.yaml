@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel-service
+  namespace: phoenix-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hotel-service
+  template:
+    metadata:
+      labels:
+        app: hotel-service
+    spec:
+      imagePullSecrets:
+      - name: ecr-registry-secret
+      containers:
+      - name: hotel-service
+        image: 787169320414.dkr.ecr.us-east-1.amazonaws.com/phoenix-hotel-service:asgardeo-distfix-20251120
+        ports:
+        - containerPort: 7103
+        envFrom:
+        - configMapRef:
+            name: asgardeo-config
+        env:
+        - name: MONGODB_CONNECTION_STRING
+          value: "mongodb://mongodb:27017/hotel-booking"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel-service
+  namespace: phoenix-app
+spec:
+  selector:
+    app: hotel-service
+  ports:
+  - port: 80
+    targetPort: 7103

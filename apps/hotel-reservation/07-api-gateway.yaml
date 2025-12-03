@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: phoenix-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      imagePullSecrets:
+      - name: ecr-registry-secret
+      containers:
+      - name: api-gateway
+        image: 787169320414.dkr.ecr.us-east-1.amazonaws.com/phoenix-api-gateway-service:asgardeo-distfix-20251120
+        ports:
+        - containerPort: 7008
+        envFrom:
+        - configMapRef:
+            name: asgardeo-config
+        env:
+        - name: IDENTITY_SERVICE_URL
+          value: "http://identity-service"
+        - name: HOTEL_SERVICE_URL
+          value: "http://hotel-service"
+        - name: BOOKING_SERVICE_URL
+          value: "http://booking-service"
+        - name: SEARCH_SERVICE_URL
+          value: "http://search-service"
+        - name: JWT_SECRET_KEY
+          value: "my-super-secret-key-change-this-later"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+  namespace: phoenix-app
+spec:
+  type: NodePort  # <--- Exposed to outside
+  selector:
+    app: api-gateway
+  ports:
+  - port: 7008
+    targetPort: 7008
+    nodePort: 30000  # <--- Access via http://MASTER_IP:30000/api/...
