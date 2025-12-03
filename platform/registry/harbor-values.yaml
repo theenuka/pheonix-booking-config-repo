@@ -3,21 +3,15 @@ expose:
   type: ingress
   ingress:
     hosts:
-      core: registry.pheonix.live
+      core: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com
     controller: default
     className: alb
     annotations:
       alb.ingress.kubernetes.io/scheme: internet-facing
       alb.ingress.kubernetes.io/target-type: ip
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-      # If you have a certificate, uncomment and add ARN:
-      # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-      # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:123456789012:certificate/uuid
-  tls:
-    enabled: false # Disable internal TLS since ALB handles it (or we use HTTP)
 
-
-externalURL: https://registry.pheonix.live
+externalURL: http://k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com
 
 harborAdminPassword: "Harbor@12345"
 
