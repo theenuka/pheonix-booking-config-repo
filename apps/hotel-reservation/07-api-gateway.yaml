@@ -30,47 +30,47 @@ spec:
         fsGroup: 2000
         runAsNonRoot: true
       containers:
-      - name: api-gateway
-        image: ttl.sh/phoenix-hotel-api-gateway-v1:2h
-        ports:
-        - containerPort: 7008
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "150m"
-          limits:
-            memory: "768Mi"
-            cpu: "700m"
-        livenessProbe:
-          tcpSocket:
-            port: 7008
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          tcpSocket:
-            port: 7008
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        envFrom:
-        - configMapRef:
-            name: asgardeo-config
-        env:
-        - name: IDENTITY_SERVICE_URL
-          value: "http://identity-service"
-        - name: HOTEL_SERVICE_URL
-          value: "http://hotel-service"
-        - name: BOOKING_SERVICE_URL
-          value: "http://booking-service"
-        - name: SEARCH_SERVICE_URL
-          value: "http://search-service"
-        - name: JWT_SECRET_KEY
-          value: "my-super-secret-key-change-this-later"
-        - name: OTEL_EXPORTER_OTLP_ENDPOINT
-          value: http://otel-collector.observability:4317
-        - name: OTEL_SERVICE_NAME
-          value: api-gateway
-        - name: OTEL_RESOURCE_ATTRIBUTES
-          value: service.namespace=phoenix-app,service.name=api-gateway,deployment.environment=prod
+        - name: api-gateway
+          image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-api-gateway-service:99acda0e49460f5ea9d1f69d92a8d6bd9f04510b
+          ports:
+            - containerPort: 7008
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "150m"
+            limits:
+              memory: "768Mi"
+              cpu: "700m"
+          livenessProbe:
+            tcpSocket:
+              port: 7008
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            tcpSocket:
+              port: 7008
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          envFrom:
+            - configMapRef:
+                name: asgardeo-config
+          env:
+            - name: IDENTITY_SERVICE_URL
+              value: "http://identity-service"
+            - name: HOTEL_SERVICE_URL
+              value: "http://hotel-service"
+            - name: BOOKING_SERVICE_URL
+              value: "http://booking-service"
+            - name: SEARCH_SERVICE_URL
+              value: "http://search-service"
+            - name: JWT_SECRET_KEY
+              value: "my-super-secret-key-change-this-later"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://otel-collector.observability:4317
+            - name: OTEL_SERVICE_NAME
+              value: api-gateway
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.namespace=phoenix-app,service.name=api-gateway,deployment.environment=prod
 ---
 apiVersion: v1
 kind: Service
@@ -84,9 +84,11 @@ spec:
   selector:
     app: api-gateway
   ports:
-  - port: 7008
-    targetPort: 7008
-
+    - port: 7008
+      targetPort: 7008
+  template:
+    spec:
+      containers: []
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -101,9 +103,12 @@ spec:
   minReplicas: 1
   maxReplicas: 6
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 65
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 65
+  template:
+    spec:
+      containers: []
