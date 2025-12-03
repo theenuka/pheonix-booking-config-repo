@@ -30,36 +30,36 @@ spec:
         fsGroup: 2000
         runAsNonRoot: true
       containers:
-      - name: search-service
-        image: ttl.sh/phoenix-hotel-search-service-v1:2h
-        ports:
-        - containerPort: 7105
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          tcpSocket:
-            port: 7105
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          tcpSocket:
-            port: 7105
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        env:
-        - name: MONGODB_CONNECTION_STRING
-          value: "mongodb://mongodb:27017/hotel-booking"
-        - name: OTEL_EXPORTER_OTLP_ENDPOINT
-          value: http://otel-collector.observability:4317
-        - name: OTEL_SERVICE_NAME
-          value: search-service
-        - name: OTEL_RESOURCE_ATTRIBUTES
-          value: service.namespace=phoenix-app,service.name=search-service,deployment.environment=prod
+        - name: search-service
+          image: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-search-service:99acda0e49460f5ea9d1f69d92a8d6bd9f04510b
+          ports:
+            - containerPort: 7105
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            tcpSocket:
+              port: 7105
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            tcpSocket:
+              port: 7105
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          env:
+            - name: MONGODB_CONNECTION_STRING
+              value: "mongodb://mongodb:27017/hotel-booking"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://otel-collector.observability:4317
+            - name: OTEL_SERVICE_NAME
+              value: search-service
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.namespace=phoenix-app,service.name=search-service,deployment.environment=prod
 ---
 apiVersion: v1
 kind: Service
@@ -72,9 +72,11 @@ spec:
   selector:
     app: search-service
   ports:
-  - port: 80
-    targetPort: 7105
-
+    - port: 80
+      targetPort: 7105
+  template:
+    spec:
+      containers: []
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -89,9 +91,12 @@ spec:
   minReplicas: 1
   maxReplicas: 5
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+  template:
+    spec:
+      containers: []
