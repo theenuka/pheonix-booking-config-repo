@@ -1,5 +1,7 @@
 clusterName: opensearch-cluster
 
+replicas: 1 # Reduce to 1 replica for dev environment
+
 persistence:
   enabled: true
   storageClass: "gp2" # AWS EBS storage class
@@ -7,13 +9,15 @@ persistence:
   
 resources:
   requests:
-    cpu: 500m
-    memory: 1Gi
+    cpu: 100m
+    memory: 256Mi
   limits:
-    cpu: 1000m
-    memory: 2Gi
+    cpu: 500m
+    memory: 512Mi
 
 extraEnvs:
+  - name: OPENSEARCH_JAVA_OPTS
+    value: "-Xms256m -Xmx256m"
   - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
     valueFrom:
       secretKeyRef:

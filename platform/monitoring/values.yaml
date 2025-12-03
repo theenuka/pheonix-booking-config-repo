@@ -22,6 +22,15 @@ grafana:
 prometheus:
   enabled: true
   prometheusSpec:
+    # Resource Limits (Critical for stability)
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+      limits:
+        memory: 1Gi
+        cpu: 500m
+
     # Persistence (Save Metrics Data)
     storageSpec:
       volumeClaimTemplate:
