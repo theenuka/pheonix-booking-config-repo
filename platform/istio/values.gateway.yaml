@@ -1,6 +1,6 @@
 service:
-  # Changed to ClusterIP for ALB Ingress
-  type: ClusterIP
+  # Changed to NodePort for ALB Ingress (instance mode)
+  type: NodePort
   ports:
   - name: status-port
     port: 15021
