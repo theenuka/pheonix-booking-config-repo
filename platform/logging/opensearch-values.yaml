@@ -17,6 +17,9 @@ resources:
 
 opensearchJavaOpts: "-Xms1g -Xmx1g -Dnode.store.allow_mmap=false"
 
+podSecurityContext:
+  sysctls: []
+
 extraEnvs:
   - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
     valueFrom:
