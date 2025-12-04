@@ -15,7 +15,13 @@ resources:
     cpu: 1000m
     memory: 2Gi
 
-opensearchJavaOpts: "-Xms1g -Xmx1g -Dnode.store.allow_mmap=false"
+opensearchJavaOpts: "-Xms1g -Xmx1g"
+
+sysctlInitContainer:
+  enabled: true
+  securityContext:
+    privileged: true
+    runAsUser: 0
 
 podSecurityContext:
   sysctls: []
