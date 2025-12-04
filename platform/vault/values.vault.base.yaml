@@ -33,19 +33,19 @@ server:
     accessMode: ReadWriteOnce
   
   # 2. SECRETS MAPPING
-  extraSecretEnvironmentVars:
-    - envName: AWS_ACCESS_KEY_ID
-      secretName: aws-kms-creds
-      secretKey: accessKeyID
-    - envName: AWS_SECRET_ACCESS_KEY
-      secretName: aws-kms-creds
-      secretKey: secretAccessKey
-    - envName: AWS_REGION
-      secretName: aws-kms-creds
-      secretKey: region
-    - envName: VAULT_AWSKMS_SEAL_KEY_ID
-      secretName: aws-kms-creds
-      secretKey: kmsKeyId
+  # extraSecretEnvironmentVars:
+  #   - envName: AWS_ACCESS_KEY_ID
+  #     secretName: aws-kms-creds
+  #     secretKey: accessKeyID
+  #   - envName: AWS_SECRET_ACCESS_KEY
+  #     secretName: aws-kms-creds
+  #     secretKey: secretAccessKey
+  #   - envName: AWS_REGION
+  #     secretName: aws-kms-creds
+  #     secretKey: region
+  #   - envName: VAULT_AWSKMS_SEAL_KEY_ID
+  #     secretName: aws-kms-creds
+  #     secretKey: kmsKeyId
   
   # 3. HIGH AVAILABILITY
   ha:
@@ -76,6 +76,6 @@ server:
           }
         }
         service_registration "kubernetes" {}
-        seal "awskms" {
-        }
+        # seal "awskms" {
+        # }
 
