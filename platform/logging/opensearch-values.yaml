@@ -15,9 +15,9 @@ resources:
     cpu: 500m
     memory: 512Mi
 
+opensearchJavaOpts: "-Xms256m -Xmx256m"
+
 extraEnvs:
-  - name: OPENSEARCH_JAVA_OPTS
-    value: "-Xms256m -Xmx256m"
   - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
     valueFrom:
       secretKeyRef:
