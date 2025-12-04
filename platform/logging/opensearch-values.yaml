@@ -17,6 +17,9 @@ resources:
 
 opensearchJavaOpts: "-Xms1g -Xmx1g"
 
+sysctlInitContainer:
+  enabled: true
+
 extraEnvs:
   - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
     valueFrom:
@@ -24,5 +27,5 @@ extraEnvs:
         name: opensearch-admin-secret # Name of the K8s Secret created by ESO
         key: password                   # Key where ESO stores the password (as per ESO config)
 
- 
+
 
