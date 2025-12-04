@@ -3,6 +3,7 @@
 # -----------------------------------------------------------------
 ui:
   enabled: true
+  serviceType: NodePort
 injector:
   enabled: true
 metrics:

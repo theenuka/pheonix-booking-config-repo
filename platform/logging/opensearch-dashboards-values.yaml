@@ -1,6 +1,9 @@
 opensearchAccount:
   secret: "opensearch-admin-secret"
 
+service:
+  type: NodePort
+
 resources:
   requests:
     cpu: 100m

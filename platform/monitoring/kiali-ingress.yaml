@@ -7,7 +7,7 @@ metadata:
   namespace: monitoring
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/target-type: instance
     alb.ingress.kubernetes.io/subnets: subnet-0a6bf732901bb35e8, subnet-066b28455fe0a88d1
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
 spec:
