@@ -15,12 +15,7 @@ resources:
     cpu: 1000m
     memory: 2Gi
 
-opensearchJavaOpts: "-Xms1g -Xmx1g"
-
-podSecurityContext:
-  sysctls:
-    - name: vm.max_map_count
-      value: "262144"
+opensearchJavaOpts: "-Xms1g -Xmx1g -Dnode.store.allow_mmap=false"
 
 extraEnvs:
   - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
