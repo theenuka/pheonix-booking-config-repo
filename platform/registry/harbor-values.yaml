@@ -23,6 +23,18 @@ externalURL: http://k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amaz
 
 harborAdminPassword: "Harbor@12345"
 
+core:
+  secret: "HarborCoreSecret123456"
+  xsrfKey: "HarborXsrfKey12345678901234567890"
+  service:
+    type: NodePort
+
+jobservice:
+  secret: "HarborJobSecret1"
+
+registry:
+  secret: "HarborRegSecret1"
+
 persistence:
   enabled: true
   imageChartStorage:
