@@ -34,9 +34,15 @@ core:
 
 jobservice:
   secret: "HarborJobSecret1"
+  strategy:
+    type: Recreate
+
 
 registry:
   secret: "HarborRegSecret1"
+  strategy:
+    type: Recreate
+
 
 persistence:
   enabled: true
