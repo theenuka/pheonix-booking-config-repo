@@ -36,8 +36,8 @@ spec:
   ignoreDifferences:
     - group: admissionregistration.k8s.io
       kind: ValidatingWebhookConfiguration
-      jqPathExpressions:
-        - .webhooks[].clientConfig.caBundle
+      jsonPointers:
+        - /webhooks
 
 ---
 # ------------------------------------------
@@ -74,8 +74,8 @@ spec:
   ignoreDifferences:
     - group: admissionregistration.k8s.io
       kind: ValidatingWebhookConfiguration
-      jqPathExpressions:
-        - .webhooks[].clientConfig.caBundle
+      jsonPointers:
+        - /webhooks
 
 ---
 # ------------------------------------------
