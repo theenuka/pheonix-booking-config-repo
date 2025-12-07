@@ -1,11 +1,12 @@
 # FluentBit Helm values
+env:
+  - name: OPENSEARCH_PASS
+    valueFrom:
+      secretKeyRef:
+        name: opensearch-admin-secret
+        key: password
+
 controller:
-  env:
-    - name: OPENSEARCH_PASS
-      valueFrom:
-        secretKeyRef:
-          name: opensearch-admin-secret
-          key: password
 
 daemonset:
   enabled: true
