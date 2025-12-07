@@ -43,6 +43,11 @@ spec:
       name: harbor-registry-htpasswd
       jsonPointers:
         - /data
+    - group: ""
+      kind: Secret
+      name: harbor-core
+      jsonPointers:
+        - /data
     - group: apps
       kind: Deployment
       jsonPointers:

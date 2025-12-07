@@ -22,6 +22,10 @@ externalURL: http://k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amaz
 harborAdminPassword: "Harbor@12345"
 secretKey: "HarborSecretKey1"
 
+internalTLS:
+  enabled: false
+  certSource: none
+
 core:
   secret: "HarborCoreSecret123456"
   xsrfKey: "HarborXsrfKey12345678901234567890"
