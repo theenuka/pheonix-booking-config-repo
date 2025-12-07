@@ -1,0 +1,22 @@
+replicaCount: 1
+image:
+  repository: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-notification-service
+  tag: "5a960badd374e01bced430311978d97f155104f2"
+service:
+  port: 7101
+serviceAccount:
+  name: notification-service-sa
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+env:
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: http://otel-collector.observability:4317
+  - name: OTEL_SERVICE_NAME
+    value: notification-service
+  - name: OTEL_RESOURCE_ATTRIBUTES
+    value: service.namespace=phoenix-app,service.name=notification-service,deployment.environment=prod

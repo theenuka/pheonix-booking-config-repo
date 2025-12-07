@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel-service
+  labels:
+    app: hotel-service
+spec:
+  selector:
+    app: hotel-service
+  ports:
+    - name: http
+      port: 80
+      targetPort: {{ .Values.service.port }}
+  type: ClusterIP

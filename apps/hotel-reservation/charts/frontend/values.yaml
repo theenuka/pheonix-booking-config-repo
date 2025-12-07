@@ -1,0 +1,15 @@
+replicaCount: 1
+image:
+  repository: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-frontend-service
+  tag: "5c0c469477dd00897e0b19c4816eabe304c63634"
+service:
+  port: 4173
+serviceAccount:
+  name: frontend-sa
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"

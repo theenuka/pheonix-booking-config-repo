@@ -1,0 +1,28 @@
+replicaCount: 1
+image:
+  repository: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-identity-service
+  tag: "5a960badd374e01bced430311978d97f155104f2"
+service:
+  port: 7102
+serviceAccount:
+  name: identity-service-sa
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+env:
+  - name: MONGODB_CONNECTION_STRING
+    value: "mongodb://mongodb:27017/hotel-booking"
+  - name: JWT_SECRET_KEY
+    value: "my-super-secret-key-change-this-later"
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: http://otel-collector.observability:4317
+  - name: OTEL_SERVICE_NAME
+    value: identity-service
+  - name: OTEL_RESOURCE_ATTRIBUTES
+    value: service.namespace=phoenix-app,service.name=identity-service,deployment.environment=prod
+  - name: LOG_LEVEL
+    value: info

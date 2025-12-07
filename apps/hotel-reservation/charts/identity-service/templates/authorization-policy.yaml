@@ -1,0 +1,13 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: identity-service-policy
+spec:
+  selector:
+    matchLabels:
+      app: identity-service
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["*"]

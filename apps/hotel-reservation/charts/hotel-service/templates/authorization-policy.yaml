@@ -1,0 +1,13 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: hotel-service-policy
+spec:
+  selector:
+    matchLabels:
+      app: hotel-service
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["*"]
