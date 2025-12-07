@@ -65,6 +65,12 @@ spec:
             - name: asgardeo-runtime-config
               mountPath: /usr/share/nginx/html/runtime-config.js
               subPath: runtime-config.js
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+            - name: nginx-run
+              mountPath: /var/run
+            - name: nginx-tmp
+              mountPath: /tmp
       volumes:
         - name: asgardeo-runtime-config
           configMap:
@@ -72,6 +78,12 @@ spec:
             items:
               - key: runtime-config.js
                 path: runtime-config.js
+        - name: nginx-cache
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir: {}
+        - name: nginx-tmp
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
