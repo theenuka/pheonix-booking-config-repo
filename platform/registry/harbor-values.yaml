@@ -1,6 +1,8 @@
 # platform/registry/harbor-values.yaml
 expose:
   type: ingress
+  tls:
+    certSource: none
   ingress:
     hosts:
       core: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com
@@ -15,13 +17,10 @@ portal:
   service:
     type: NodePort
 
-core:
-  service:
-    type: NodePort
-
 externalURL: http://k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com
 
 harborAdminPassword: "Harbor@12345"
+secretKey: "HarborEncryptionKey123"
 
 core:
   secret: "HarborCoreSecret123456"
