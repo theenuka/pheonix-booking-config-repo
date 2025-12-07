@@ -26,3 +26,4 @@ kubeconfig
 # Terraform/Pulumi (if used for bootstrapping)
 .terraform/
 *.tfstate
+vault-keys.txt

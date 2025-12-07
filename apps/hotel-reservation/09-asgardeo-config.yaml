@@ -14,7 +14,7 @@ data:
       console.log("Runtime config loading (Hardcoded)...");
       
       // Hardcoded for stability
-      const fixedOrigin = "http://phoenix-alb-1908878835.us-east-1.elb.amazonaws.com";
+      const fixedOrigin = "http://k8s-istioing-phoenixa-873394dda6-1071176334.us-east-1.elb.amazonaws.com";
 
       window.__ASGARDEO_CONFIG = {
         signInRedirectURL: fixedOrigin + "/sign-in",
