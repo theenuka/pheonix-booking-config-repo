@@ -37,3 +37,15 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=false
+  ignoreDifferences:
+    - group: ""
+      kind: ConfigMap
+      name: kiali
+      jsonPointers:
+        - /data
+    - group: apps
+      kind: Deployment
+      name: kiali
+      jsonPointers:
+        - /spec/template/metadata/annotations/checksum~1config
+
