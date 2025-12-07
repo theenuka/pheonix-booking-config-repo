@@ -20,7 +20,7 @@ portal:
 externalURL: http://k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com
 
 harborAdminPassword: "Harbor@12345"
-secretKey: "HarborEncryptionKey123"
+secretKey: "HarborSecretKey1"
 
 core:
   secret: "HarborCoreSecret123456"

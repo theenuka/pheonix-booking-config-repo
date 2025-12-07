@@ -35,4 +35,5 @@ spec:
       name: opensearch-cluster-master
       jsonPointers:
         - /spec/template/spec/initContainers
+        - /spec/volumeClaimTemplates
 
