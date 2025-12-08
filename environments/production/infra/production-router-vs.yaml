@@ -5,7 +5,7 @@ metadata:
   namespace: phoenix-prod
 spec:
   hosts:
-    - "pheonix-prod.pheonix.live"
+    - "*"
   gateways:
     - istio-ingress/phoenix-prod-gateway
   http:

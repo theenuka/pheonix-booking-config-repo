@@ -12,7 +12,7 @@ spec:
         args:
         - "--dockerfile=/workspace/hotel-booking-frontend/Dockerfile"
         - "--context=/workspace"
-        - "--destination=ttl.sh/phoenix-hotel-frontend-v1:2h"
+        - "--destination=k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-frontend-service:latest"
         volumeMounts:
         - name: source-volume
           mountPath: /workspace
@@ -37,7 +37,7 @@ spec:
         - "--dockerfile=/workspace/backend/services/booking-service/Dockerfile"
         - "--context=/workspace"
         - "--build-arg=SERVICE_PATH=backend/services/booking-service"
-        - "--destination=ttl.sh/phoenix-hotel-booking-service-v1:2h"
+        - "--destination=k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-booking-service:latest"
         volumeMounts:
         - name: source-volume
           mountPath: /workspace
@@ -62,7 +62,7 @@ spec:
         - "--dockerfile=/workspace/backend/services/hotel-service/Dockerfile"
         - "--context=/workspace"
         - "--build-arg=SERVICE_PATH=backend/services/hotel-service"
-        - "--destination=ttl.sh/phoenix-hotel-hotel-service-v1:2h"
+        - "--destination=k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-hotel-service:latest"
         volumeMounts:
         - name: source-volume
           mountPath: /workspace
@@ -87,7 +87,7 @@ spec:
         - "--dockerfile=/workspace/backend/services/identity-service/Dockerfile"
         - "--context=/workspace"
         - "--build-arg=SERVICE_PATH=backend/services/identity-service"
-        - "--destination=ttl.sh/phoenix-hotel-identity-service-v1:2h"
+        - "--destination=k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-identity-service:latest"
         volumeMounts:
         - name: source-volume
           mountPath: /workspace
@@ -112,7 +112,7 @@ spec:
         - "--dockerfile=/workspace/backend/services/notification-service/Dockerfile"
         - "--context=/workspace"
         - "--build-arg=SERVICE_PATH=backend/services/notification-service"
-        - "--destination=ttl.sh/phoenix-hotel-notification-service-v1:2h"
+        - "--destination=k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-notification-service:latest"
         volumeMounts:
         - name: source-volume
           mountPath: /workspace
@@ -137,7 +137,7 @@ spec:
         - "--dockerfile=/workspace/backend/services/search-service/Dockerfile"
         - "--context=/workspace"
         - "--build-arg=SERVICE_PATH=backend/services/search-service"
-        - "--destination=ttl.sh/phoenix-hotel-search-service-v1:2h"
+        - "--destination=k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-search-service:latest"
         volumeMounts:
         - name: source-volume
           mountPath: /workspace

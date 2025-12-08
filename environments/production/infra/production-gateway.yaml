@@ -7,20 +7,20 @@ spec:
   selector:
     istio: ingress
   servers:
-  - port:
-      number: 80
+  - hosts:
+    - "*"
+    port:
       name: http-prod
+      number: 80
       protocol: HTTP
-    hosts:
-      - "pheonix-prod.pheonix.live"
     tls:
       httpsRedirect: true
-  - port:
-      number: 443
+  - hosts:
+    - "*"
+    port:
       name: https-prod
+      number: 443
       protocol: HTTPS
-    hosts:
-      - "pheonix-prod.pheonix.live"
     tls:
-      mode: SIMPLE
       credentialName: pheonix-live-tls
+      mode: SIMPLE

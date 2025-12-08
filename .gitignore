@@ -27,3 +27,5 @@ kubeconfig
 .terraform/
 *.tfstate
 vault-keys.txt
+tls.key
+tls.crt
