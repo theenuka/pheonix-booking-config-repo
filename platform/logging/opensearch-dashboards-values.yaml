@@ -1,6 +1,3 @@
-opensearchAccount:
-  secret: "opensearch-admin-secret"
-
 opensearchHosts: "http://opensearch-cluster-master:9200"
 
 service:
@@ -22,10 +19,3 @@ workspace:
 
 explore:
   enabled: true
-
-extraEnvs:
-  - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: opensearch-admin-secret
-        key: password
