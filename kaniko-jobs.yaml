@@ -12,15 +12,24 @@ spec:
         args:
         - "--dockerfile=/workspace/hotel-booking-frontend/Dockerfile"
         - "--context=/workspace"
+        - "--insecure"
         - "--destination=k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-frontend-service:latest"
         volumeMounts:
         - name: source-volume
           mountPath: /workspace
+        - name: docker-config
+          mountPath: /kaniko/.docker/
       restartPolicy: Never
       volumes:
       - name: source-volume
         persistentVolumeClaim:
           claimName: source-code-pvc
+      - name: docker-config
+        secret:
+          secretName: harbor-creds
+          items:
+            - key: .dockerconfigjson
+              path: config.json
 ---
 apiVersion: batch/v1
 kind: Job
@@ -37,15 +46,24 @@ spec:
         - "--dockerfile=/workspace/backend/services/booking-service/Dockerfile"
         - "--context=/workspace"
         - "--build-arg=SERVICE_PATH=backend/services/booking-service"
+        - "--insecure"
         - "--destination=k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-booking-service:latest"
         volumeMounts:
         - name: source-volume
           mountPath: /workspace
+        - name: docker-config
+          mountPath: /kaniko/.docker/
       restartPolicy: Never
       volumes:
       - name: source-volume
         persistentVolumeClaim:
           claimName: source-code-pvc
+      - name: docker-config
+        secret:
+          secretName: harbor-creds
+          items:
+            - key: .dockerconfigjson
+              path: config.json
 ---
 apiVersion: batch/v1
 kind: Job
@@ -62,15 +80,24 @@ spec:
         - "--dockerfile=/workspace/backend/services/hotel-service/Dockerfile"
         - "--context=/workspace"
         - "--build-arg=SERVICE_PATH=backend/services/hotel-service"
+        - "--insecure"
         - "--destination=k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-hotel-service:latest"
         volumeMounts:
         - name: source-volume
           mountPath: /workspace
+        - name: docker-config
+          mountPath: /kaniko/.docker/
       restartPolicy: Never
       volumes:
       - name: source-volume
         persistentVolumeClaim:
           claimName: source-code-pvc
+      - name: docker-config
+        secret:
+          secretName: harbor-creds
+          items:
+            - key: .dockerconfigjson
+              path: config.json
 ---
 apiVersion: batch/v1
 kind: Job
@@ -87,15 +114,24 @@ spec:
         - "--dockerfile=/workspace/backend/services/identity-service/Dockerfile"
         - "--context=/workspace"
         - "--build-arg=SERVICE_PATH=backend/services/identity-service"
+        - "--insecure"
         - "--destination=k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-identity-service:latest"
         volumeMounts:
         - name: source-volume
           mountPath: /workspace
+        - name: docker-config
+          mountPath: /kaniko/.docker/
       restartPolicy: Never
       volumes:
       - name: source-volume
         persistentVolumeClaim:
           claimName: source-code-pvc
+      - name: docker-config
+        secret:
+          secretName: harbor-creds
+          items:
+            - key: .dockerconfigjson
+              path: config.json
 ---
 apiVersion: batch/v1
 kind: Job
@@ -112,15 +148,24 @@ spec:
         - "--dockerfile=/workspace/backend/services/notification-service/Dockerfile"
         - "--context=/workspace"
         - "--build-arg=SERVICE_PATH=backend/services/notification-service"
+        - "--insecure"
         - "--destination=k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-notification-service:latest"
         volumeMounts:
         - name: source-volume
           mountPath: /workspace
+        - name: docker-config
+          mountPath: /kaniko/.docker/
       restartPolicy: Never
       volumes:
       - name: source-volume
         persistentVolumeClaim:
           claimName: source-code-pvc
+      - name: docker-config
+        secret:
+          secretName: harbor-creds
+          items:
+            - key: .dockerconfigjson
+              path: config.json
 ---
 apiVersion: batch/v1
 kind: Job
@@ -137,12 +182,21 @@ spec:
         - "--dockerfile=/workspace/backend/services/search-service/Dockerfile"
         - "--context=/workspace"
         - "--build-arg=SERVICE_PATH=backend/services/search-service"
+        - "--insecure"
         - "--destination=k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-search-service:latest"
         volumeMounts:
         - name: source-volume
           mountPath: /workspace
+        - name: docker-config
+          mountPath: /kaniko/.docker/
       restartPolicy: Never
       volumes:
       - name: source-volume
         persistentVolumeClaim:
           claimName: source-code-pvc
+      - name: docker-config
+        secret:
+          secretName: harbor-creds
+          items:
+            - key: .dockerconfigjson
+              path: config.json

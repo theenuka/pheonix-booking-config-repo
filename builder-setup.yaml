@@ -20,6 +20,7 @@ spec:
   - name: transfer
     image: ubuntu
     command: ["/bin/bash", "-c", "apt-get update && apt-get install -y tar && sleep infinity"]
+    imagePullPolicy: IfNotPresent
     volumeMounts:
     - mountPath: /workspace
       name: source-volume
