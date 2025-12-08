@@ -1,6 +1,8 @@
 opensearchAccount:
   secret: "opensearch-admin-secret"
 
+opensearchHosts: "http://opensearch-cluster-master:9200"
+
 service:
   type: NodePort
 
