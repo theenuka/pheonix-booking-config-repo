@@ -1,1 +1,15 @@
-# TODO: add ServiceMonitor for RabbitMQ metrics
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: rabbitmq-monitor
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: rabbitmq
+  endpoints:
+    - port: management
+      path: /metrics
+      interval: 15s
+

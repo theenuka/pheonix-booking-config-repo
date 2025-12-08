@@ -1,1 +1,21 @@
-# TODO: add Istio VirtualService for RabbitMQ if needed
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: rabbitmq-vs
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - phoenix-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /rabbitmq
+      rewrite:
+        uri: /
+      route:
+        - destination:
+            host: rabbitmq
+            port:
+              number: 15672
+

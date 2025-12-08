@@ -1,1 +1,36 @@
-# values for rabbitmq chart
+replicaCount: 1
+
+image:
+  repository: rabbitmq
+  tag: "3.12-management-alpine"
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  name: rabbitmq-sa
+
+service:
+  type: ClusterIP
+  port: 5672
+  managementPort: 15672
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+persistence:
+  enabled: false
+  size: 1Gi
+
+auth:
+  username: user
+  password: password
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+
