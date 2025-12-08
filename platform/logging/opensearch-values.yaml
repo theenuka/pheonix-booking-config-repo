@@ -17,6 +17,10 @@ resources:
 
 opensearchJavaOpts: "-Xms1g -Xmx1g"
 
+config:
+  opensearch.yml:
+    plugins.security.disabled: true
+
 sysctlInit:
   enabled: true
 
