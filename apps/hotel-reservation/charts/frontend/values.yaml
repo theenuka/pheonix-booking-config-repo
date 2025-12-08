@@ -3,7 +3,9 @@ image:
   repository: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-frontend-service
   tag: "5c0c469477dd00897e0b19c4816eabe304c63634"
 service:
+  type: NodePort
   port: 4173
+  nodePort: 30001
 serviceAccount:
   name: frontend-sa
 

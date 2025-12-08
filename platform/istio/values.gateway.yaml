@@ -8,6 +8,7 @@ service:
   - name: http2
     port: 80
     targetPort: 8080
+    nodePort: 30000 # Match Terraform Target Group
   - name: https
     port: 443
     targetPort: 8443
