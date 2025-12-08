@@ -25,31 +25,6 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: build-api-gateway
-  namespace: default
-spec:
-  template:
-    spec:
-      containers:
-      - name: kaniko
-        image: gcr.io/kaniko-project/executor:latest
-        args:
-        - "--dockerfile=/workspace/backend/services/api-gateway/Dockerfile"
-        - "--context=/workspace"
-        - "--build-arg=SERVICE_PATH=backend/services/api-gateway"
-        - "--destination=ttl.sh/phoenix-hotel-api-gateway-v1:2h"
-        volumeMounts:
-        - name: source-volume
-          mountPath: /workspace
-      restartPolicy: Never
-      volumes:
-      - name: source-volume
-        persistentVolumeClaim:
-          claimName: source-code-pvc
----
-apiVersion: batch/v1
-kind: Job
-metadata:
   name: build-booking-service
   namespace: default
 spec:
