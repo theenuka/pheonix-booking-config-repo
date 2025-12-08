@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: asgardeo-config
-  namespace: phoenix-app
+
 data:
   ASGARDEO_TENANT_DOMAIN: "theenukagranex"
   ASGARDEO_CLIENT_ID: "iYcA_MO8LwTND_hvunAg8VvBHDua"
