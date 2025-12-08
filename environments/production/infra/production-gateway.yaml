@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: phoenix-prod-gateway
+  namespace: istio-ingress
+spec:
+  selector:
+    istio: ingress
+  servers:
+  - port:
+      number: 80
+      name: http-prod
+      protocol: HTTP
+    hosts:
+      - "pheonix-prod.pheonix.live"
+    tls:
+      httpsRedirect: true
+  - port:
+      number: 443
+      name: https-prod
+      protocol: HTTPS
+    hosts:
+      - "pheonix-prod.pheonix.live"
+    tls:
+      mode: SIMPLE
+      credentialName: pheonix-live-tls
