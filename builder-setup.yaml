@@ -16,11 +16,19 @@ metadata:
   name: transfer-pod
   namespace: default
 spec:
+  restartPolicy: OnFailure
   containers:
   - name: transfer
-    image: ubuntu
-    command: ["/bin/bash", "-c", "apt-get update && apt-get install -y tar && sleep infinity"]
+    image: nginx:alpine
+    command: ["/bin/sh", "-c", "sleep infinity"]
     imagePullPolicy: IfNotPresent
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "50m"
+      limits:
+        memory: "128Mi"
+        cpu: "100m"
     volumeMounts:
     - mountPath: /workspace
       name: source-volume

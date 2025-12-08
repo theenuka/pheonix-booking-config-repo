@@ -31,7 +31,7 @@ spec:
         fsGroup: 2000
         runAsNonRoot: true
       imagePullSecrets:
-        - name: regcred
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
       containers:
         - name: search-service
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

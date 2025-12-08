@@ -6,6 +6,10 @@ service:
   port: 7104
 serviceAccount:
   name: booking-service-sa
+
+imagePullSecrets:
+  - name: harbor-creds
+
 resources:
   requests:
     memory: "128Mi"

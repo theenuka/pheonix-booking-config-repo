@@ -6,6 +6,10 @@ service:
   port: 7102
 serviceAccount:
   name: identity-service-sa
+
+imagePullSecrets:
+  - name: harbor-creds
+
 resources:
   requests:
     memory: "128Mi"

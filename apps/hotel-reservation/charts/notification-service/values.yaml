@@ -6,6 +6,10 @@ service:
   port: 7101
 serviceAccount:
   name: notification-service-sa
+
+imagePullSecrets:
+  - name: harbor-creds
+
 resources:
   requests:
     memory: "128Mi"

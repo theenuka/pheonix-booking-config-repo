@@ -6,6 +6,10 @@ service:
   port: 7105
 serviceAccount:
   name: search-service-sa
+
+imagePullSecrets:
+  - name: harbor-creds
+
 resources:
   requests:
     memory: "128Mi"

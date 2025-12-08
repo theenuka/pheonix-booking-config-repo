@@ -6,6 +6,10 @@ service:
   port: 4173
 serviceAccount:
   name: frontend-sa
+
+imagePullSecrets:
+  - name: harbor-creds
+
 resources:
   requests:
     memory: "128Mi"
