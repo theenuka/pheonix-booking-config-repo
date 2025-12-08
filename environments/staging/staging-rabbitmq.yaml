@@ -1,0 +1,8 @@
+rabbitmq:
+  image:
+    repository: bitnami/rabbitmq
+    tag: "3.12-management"
+  auth:
+    username: admin
+    password: "StagingRabbitMQPass123!"
+  replicaCount: 1

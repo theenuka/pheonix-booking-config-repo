@@ -1,0 +1,4 @@
+notification-service:
+  image:
+    tag: "latest"
+  replicaCount: 1

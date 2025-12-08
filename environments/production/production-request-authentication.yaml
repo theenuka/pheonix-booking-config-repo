@@ -1,0 +1,14 @@
+# Placeholder for production RequestAuthentication (Istio) for phoenix apps.
+# Define JWT issuer/audience settings per your IdP.
+# Example:
+# apiVersion: security.istio.io/v1beta1
+# kind: RequestAuthentication
+# metadata:
+#   name: phoenix-prod-request-authentication
+#   namespace: phoenix-prod
+# spec:
+#   jwtRules:
+#     - issuer: "https://issuer.example.com/"
+#       audiences:
+#         - "phoenix-prod"
+#       jwksUri: "https://issuer.example.com/.well-known/jwks.json"

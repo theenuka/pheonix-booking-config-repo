@@ -5,7 +5,7 @@ This repository serves as the **GitOps Source of Truth** for the Phoenix Booking
 ## Structure
 
 *   **`app-of-apps/`**: The entry point for ArgoCD. Contains the "Root App" which points to other applications.
-*   **`apps/`**: Application-specific manifests (e.g., `hotel-reservation`, `user-service`).
+*   **`apps/`**: Application-specific manifests (e.g., `hotel-reservation`).
 *   **`platform/`**: Infrastructure services (Istio, Vault, Monitoring, Logging).
 *   **`environments/`**: Environment-specific overlays (staging/production).
 

@@ -1,0 +1,12 @@
+frontend:
+  image:
+    # Override with the prod image tag for the frontend SPA
+    tag: "latest"
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"

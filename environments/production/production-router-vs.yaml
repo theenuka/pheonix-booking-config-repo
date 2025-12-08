@@ -1,13 +1,13 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: phoenix-staging-router
-  namespace: phoenix-staging
+  name: phoenix-prod-router
+  namespace: phoenix-prod
 spec:
   hosts:
-    - "pheonix-staging.pheonix.live"
+    - "pheonix-prod.pheonix.live"
   gateways:
-    - istio-ingress/staging-gateway
+    - istio-ingress/phoenix-prod-gateway
   http:
     # Auth/identity
     - match:
@@ -17,11 +17,11 @@ spec:
             prefix: /api/users
       route:
         - destination:
-            host: identity-service.phoenix-staging.svc.cluster.local
+            host: identity-service.phoenix-prod.svc.cluster.local
             port:
               number: 7102
 
-    # Hotel service (public catalog)
+    # Hotel service
     - match:
         - uri:
             prefix: /api/hotels
@@ -29,11 +29,11 @@ spec:
             prefix: /api/my-hotels
       route:
         - destination:
-            host: hotel-service.phoenix-staging.svc.cluster.local
+            host: hotel-service.phoenix-prod.svc.cluster.local
             port:
               number: 7103
 
-    # Booking service (nested hotel bookings + direct)
+    # Booking service
     - match:
         - uri:
             prefix: /api/bookings
@@ -47,7 +47,7 @@ spec:
             regex: "/api/hotels/.*/waitlist"
       route:
         - destination:
-            host: booking-service.phoenix-staging.svc.cluster.local
+            host: booking-service.phoenix-prod.svc.cluster.local
             port:
               number: 7104
 
@@ -59,7 +59,7 @@ spec:
             prefix: /api/search
       route:
         - destination:
-            host: search-service.phoenix-staging.svc.cluster.local
+            host: search-service.phoenix-prod.svc.cluster.local
             port:
               number: 7105
 
@@ -71,7 +71,7 @@ spec:
             prefix: /api/push
       route:
         - destination:
-            host: notification-service.phoenix-staging.svc.cluster.local
+            host: notification-service.phoenix-prod.svc.cluster.local
             port:
               number: 7101
 
@@ -81,6 +81,6 @@ spec:
             prefix: /
       route:
         - destination:
-            host: frontend.phoenix-staging.svc.cluster.local
+            host: frontend.phoenix-prod.svc.cluster.local
             port:
               number: 80
