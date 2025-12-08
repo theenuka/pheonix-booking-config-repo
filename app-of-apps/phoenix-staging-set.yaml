@@ -13,13 +13,13 @@ spec:
     path: apps/hotel-reservation
     helm:
       valueFiles:
-        - environments/staging/staging-frontend.yaml
-        - environments/staging/staging-identity-service.yaml
-        - environments/staging/staging-hotel-service.yaml
-        - environments/staging/staging-booking-service.yaml
-        - environments/staging/staging-search-service.yaml
-        - environments/staging/staging-notification-service.yaml
-        - environments/staging/staging-rabbitmq.yaml
+        - ../../environments/staging/staging-frontend.yaml
+        - ../../environments/staging/staging-identity-service.yaml
+        - ../../environments/staging/staging-hotel-service.yaml
+        - ../../environments/staging/staging-booking-service.yaml
+        - ../../environments/staging/staging-search-service.yaml
+        - ../../environments/staging/staging-notification-service.yaml
+        - ../../environments/staging/staging-rabbitmq.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: phoenix-staging
