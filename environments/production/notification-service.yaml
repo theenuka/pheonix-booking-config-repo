@@ -1,7 +1,7 @@
 notification-service:
   image:
     tag: "latest"
-  replicaCount: 2
+  replicaCount: 1
   resources:
     requests:
       cpu: "200m"
