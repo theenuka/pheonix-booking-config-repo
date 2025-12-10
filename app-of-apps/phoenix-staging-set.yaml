@@ -1,7 +1,91 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: phoenix-staging-set
+  name: platform-argocd
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: staging
+    path: platform/argocd # This path will contain the argocd-server-ingress.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-monitoring
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 79.7.1
+      helm:
+        valueFiles:
+          - $values/platform/monitoring/values.yaml
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: staging
+      ref: values
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: staging
+      path: platform/monitoring
+      directory:
+        include: 'grafana-allow-policy.yaml'
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-vault
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: staging
+    path: platform/vault
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hotel-reservation-staging
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -13,7 +97,7 @@ spec:
     path: apps/hotel-reservation
   destination:
     server: https://kubernetes.default.svc
-    namespace: staging # Deploy to the staging namespace
+    namespace: staging
   syncPolicy:
     automated:
       prune: true
