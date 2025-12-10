@@ -48,4 +48,3 @@ spec:
       name: kiali
       jsonPointers:
         - /spec/template/metadata/annotations/checksum~1config
-

@@ -1,18 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: phoenix-staging-root-apps
+  name: platform-apps
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  annotations:
-    gemini-trigger: "1702293457" # Dummy annotation to trigger reconciliation
 spec:
   project: default
   source:
     repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-    targetRevision: staging
-    path: app-of-apps/staging-config
+    targetRevision: master
+    path: app-of-apps/platform
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
@@ -26,7 +24,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: phoenix-production-root-apps
+  name: business-apps
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -34,8 +32,8 @@ spec:
   project: default
   source:
     repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-    targetRevision: production
-    path: app-of-apps/production-config
+    targetRevision: master
+    path: app-of-apps/apps
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

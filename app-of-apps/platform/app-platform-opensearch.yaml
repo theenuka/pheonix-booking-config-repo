@@ -36,4 +36,3 @@ spec:
       jsonPointers:
         - /spec/template/spec/initContainers
         - /spec/volumeClaimTemplates
-
