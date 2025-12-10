@@ -1,0 +1,120 @@
+# ------------------------------------------
+# 1. ISTIO BASE (CRDs)
+# ------------------------------------------
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-base
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  sources:
+    - repoURL: https://istio-release.storage.googleapis.com/charts
+      chart: base
+      targetRevision: 1.28.0
+      helm:
+        valueFiles:
+          - $values/platform/istio/values.base.yaml
+          - $values/platform/istio/values.istiod.yaml
+          - $values/platform/istio/values.gateway.yaml
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: production
+      ref: values
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true 
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      jsonPointers:
+        - /webhooks
+
+---
+# ------------------------------------------
+# 2. ISTIOD (Control Plane)
+# ------------------------------------------
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istiod
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: production
+      ref: values
+    - repoURL: https://istio-release.storage.googleapis.com/charts
+      chart: istiod
+      targetRevision: 1.28.0
+      helm:
+        valueFiles:
+          - $values/platform/istio/values.istiod.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      jsonPointers:
+        - /webhooks
+
+---
+# ------------------------------------------
+# 3. ISTIO INGRESS (Gateway)
+# ------------------------------------------
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-ingress
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: production
+      ref: values
+
+    - repoURL: https://istio-release.storage.googleapis.com/charts
+      chart: gateway
+      targetRevision: 1.28.0
+      helm:
+        valueFiles:
+          - $values/platform/istio/values.gateway.yaml
+
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: production
+      path: platform/istio
+      directory:
+        include: '{certificate.yaml,gateway.yaml,jwt-validation-policy.yaml,alb-ingress.yaml,peer-authentication.yaml}'
+
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-ingress
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
