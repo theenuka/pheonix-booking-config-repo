@@ -1,0 +1,28 @@
+apiVersion: v2
+name: hotel-reservation
+description: A Helm chart for the Hotel Reservation System
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+dependencies:
+  - name: hotel-service
+    version: 0.1.0
+    repository: "file://charts/hotel-service"
+  - name: booking-service
+    version: 0.1.0
+    repository: "file://charts/booking-service"
+  - name: search-service
+    version: 0.1.0
+    repository: "file://charts/search-service"
+  - name: notification-service
+    version: 0.1.0
+    repository: "file://charts/notification-service"
+  - name: identity-service
+    version: 0.1.0
+    repository: "file://charts/identity-service"
+  - name: frontend
+    version: 0.1.0
+    repository: "file://charts/frontend"
+  - name: rabbitmq
+    version: 0.1.0
+    repository: "file://charts/rabbitmq"
