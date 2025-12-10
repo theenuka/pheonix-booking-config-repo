@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: root-app
+  name: phoenix-staging-root
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -9,8 +9,31 @@ spec:
   project: default
   source:
     repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-    targetRevision: master
-    path: app-of-apps
+    targetRevision: staging
+    path: app-of-apps/phoenix-staging-set.yaml # This will point to a specific app-of-apps file
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: phoenix-production-root
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: production
+    path: app-of-apps/phoenix-production-set.yaml # This will point to a specific app-of-apps file
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
