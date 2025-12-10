@@ -5,6 +5,8 @@ metadata:
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
+  annotations:
+    gemini-trigger: "1702293456" # Dummy annotation to trigger reconciliation
 spec:
   project: default
   source:
