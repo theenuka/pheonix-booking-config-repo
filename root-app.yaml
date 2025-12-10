@@ -1,19 +1,85 @@
+# This file is applied by Ansible and defines all ArgoCD applications.
+
+# --- PLATFORM APPLICATIONS ---
+
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: platform-apps
+  name: platform-argocd
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
     repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
     targetRevision: master
-    path: app-of-apps/platform
+    path: platform/argocd
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-monitoring
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 79.7.1
+      helm:
+        valueFiles:
+          - $values/platform/monitoring/values.yaml
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
+      ref: values
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
+      path: platform/monitoring
+      directory:
+        include: 'grafana-allow-policy.yaml'
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-vault
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: master
+    path: platform/vault
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
+---
+# ... other platform apps ...
+
+# --- BUSINESS APPLICATIONS ---
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hotel-reservation-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: staging
+    path: apps/hotel-reservation
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
   syncPolicy:
     automated:
       prune: true
@@ -24,19 +90,17 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: business-apps
+  name: hotel-reservation-production
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
     repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-    targetRevision: master
-    path: app-of-apps/apps
+    targetRevision: production
+    path: apps/hotel-reservation
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: production
   syncPolicy:
     automated:
       prune: true
