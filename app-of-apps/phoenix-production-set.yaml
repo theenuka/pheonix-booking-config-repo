@@ -9,20 +9,11 @@ spec:
   project: default
   source:
     repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-    targetRevision: master
+    targetRevision: production
     path: apps/hotel-reservation
-    helm:
-      valueFiles:
-        - ../../environments/production/frontend.yaml
-        - ../../environments/production/identity-service.yaml
-        - ../../environments/production/hotel-service.yaml
-        - ../../environments/production/booking-service.yaml
-        - ../../environments/production/search-service.yaml
-        - ../../environments/production/notification-service.yaml
-        - ../../environments/production/rabbitmq.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: phoenix-prod
+    namespace: production # Deploy to the production namespace
   syncPolicy:
     automated:
       prune: true
