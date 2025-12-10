@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opensearch
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: staging
+      ref: values
+    - repoURL: https://opensearch-project.github.io/helm-charts/
+      targetRevision: 3.3.2
+      chart: opensearch
+      helm:
+        valueFiles:
+          - $values/platform/logging/opensearch-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: opensearch
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      name: opensearch-cluster-master
+      jsonPointers:
+        - /spec/template/spec/initContainers
+        - /spec/volumeClaimTemplates
