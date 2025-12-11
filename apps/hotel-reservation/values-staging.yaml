@@ -1,12 +1,12 @@
 # Staging Environment Values for Phoenix Booking Hotel Reservation System
 
 global:
-  # Container Registry Configuration (HTTP for demo)
+  # Container Registry Configuration (Using internal ClusterIP)
   registry:
-    url: "k8s-harbor-harborin-04b31170bb-1726610408.us-east-1.elb.amazonaws.com"
+    url: "10.102.154.26"  # Harbor ClusterIP for internal cluster access
     project: "phoenix-project"
     imagePullSecrets:
-      - name: harbor-creds
+      - name: harbor-credentials
 
   # Environment
   environment: "staging"
