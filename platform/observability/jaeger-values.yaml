@@ -1,0 +1,83 @@
+# Jaeger Distributed Tracing Platform
+# Helm values for jaeger-all-in-one deployment
+# Provides trace collection, storage, and UI for distributed tracing
+
+allInOne:
+  enabled: true
+  image:
+    repository: jaegertracing/all-in-one
+    tag: "1.53"
+
+  # Resources for the all-in-one pod
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+
+  # Environment variables
+  extraEnv:
+    - name: COLLECTOR_OTLP_ENABLED
+      value: "true"
+    - name: SPAN_STORAGE_TYPE
+      value: "memory"
+    - name: QUERY_BASE_PATH
+      value: "/"
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    ports:
+      # Jaeger UI
+      - name: query
+        port: 16686
+        targetPort: 16686
+      # OTLP gRPC receiver
+      - name: otlp-grpc
+        port: 4317
+        targetPort: 4317
+      # OTLP HTTP receiver
+      - name: otlp-http
+        port: 4318
+        targetPort: 4318
+      # Jaeger Collector
+      - name: collector
+        port: 14268
+        targetPort: 14268
+      # Zipkin compatible endpoint
+      - name: zipkin
+        port: 9411
+        targetPort: 9411
+
+# Service Monitor for Prometheus scraping
+serviceMonitor:
+  enabled: true
+  additionalLabels:
+    release: monitoring-stack
+
+# Storage configuration (using memory for demo)
+# For production, configure persistent storage (Elasticsearch, Cassandra, etc.)
+storage:
+  type: memory
+  memory:
+    maxTraces: 10000
+
+# Security Context
+podSecurityContext:
+  runAsUser: 1000
+  runAsNonRoot: true
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
+
+# Node selector and tolerations
+nodeSelector: {}
+tolerations: []
+affinity: {}

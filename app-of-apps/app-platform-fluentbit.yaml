@@ -10,7 +10,7 @@ spec:
   sources:
     # SOURCE 1: Git Repository (Value Provider)
     - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-      targetRevision: master
+      targetRevision: main
       ref: values
       
     # SOURCE 2: Helm Chart (Fluent Bit)

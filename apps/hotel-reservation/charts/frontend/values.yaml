@@ -1,16 +1,19 @@
 replicaCount: 1
 image:
-  repository: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-frontend-service
-  tag: "5c0c469477dd00897e0b19c4816eabe304c63634"
+  # Image repository is now constructed from global.registry values
+  # Format: {{ .Values.global.registry.url }}/{{ .Values.global.registry.project }}/{{ .Values.image.name }}
+  repository: ""  # Templated in deployment.yaml using global values
+  name: "phoenix-frontend-service"
+  tag: "latest"  # Overridden by ArgoCD Image Updater
 service:
-  type: NodePort
-  port: 4173
-  nodePort: 30001
+  type: ClusterIP
+  port: 80
+  targetPort: 4173
 serviceAccount:
   name: frontend-sa
 
-imagePullSecrets:
-  - name: harbor-creds
+# Image pull secrets inherited from global
+imagePullSecrets: []  # Uses global.registry.imagePullSecrets
 
 resources:
   requests:

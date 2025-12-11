@@ -17,14 +17,11 @@ spec:
         valueFiles:
           - $values/platform/monitoring/values.yaml
 
-    # 2. Your Repo (For Values)
     - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-      targetRevision: master
+      targetRevision: main
       ref: values
-
-    # 3. Your Repo (For Manifests)
     - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-      targetRevision: master
+      targetRevision: main
       path: platform/monitoring
       directory:
         include: 'grafana-allow-policy.yaml'

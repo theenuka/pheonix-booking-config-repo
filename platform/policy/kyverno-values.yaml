@@ -1,0 +1,145 @@
+# Kyverno Helm Chart Values
+# Policy Engine for Kubernetes
+# Provides policy as code for security, compliance, and best practices
+
+# Replica configuration for HA
+replicaCount: 2
+
+# Image configuration
+image:
+  repository: ghcr.io/kyverno/kyverno
+  tag: v1.11.0
+  pullPolicy: IfNotPresent
+
+# Resources for Kyverno controller
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 1000m
+    memory: 512Mi
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 443
+
+# Admission controller configuration
+admissionController:
+  replicas: 2
+
+  # Resource limits for admission controller
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+# Background controller configuration
+backgroundController:
+  enabled: true
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+# Cleanup controller configuration
+cleanupController:
+  enabled: true
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+# Reports controller configuration
+reportsController:
+  enabled: true
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+# Feature flags
+features:
+  # Enable policy exceptions
+  policyExceptions:
+    enabled: true
+
+  # Enable admission reports
+  admissionReports:
+    enabled: true
+
+  # Enable background scanning
+  backgroundScan:
+    enabled: true
+
+  # Generate success events
+  generateSuccessEvents: false
+
+# Security context
+podSecurityContext:
+  runAsNonRoot: true
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  privileged: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+# Service monitor for Prometheus
+metricsService:
+  create: true
+  type: ClusterIP
+  port: 8000
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
+
+# Webhook configuration
+webhooksCleanup:
+  enabled: true
+
+# Node selector and tolerations
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Priority class
+priorityClassName: system-cluster-critical
+
+# Update strategy
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+
+# Pod disruption budget
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1

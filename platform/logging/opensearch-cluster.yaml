@@ -1,0 +1,174 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: opensearch-cluster-master
+  namespace: opensearch
+  labels:
+    app: opensearch
+    component: master
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 9200
+      targetPort: 9200
+      protocol: TCP
+    - name: transport
+      port: 9300
+      targetPort: 9300
+      protocol: TCP
+  selector:
+    app: opensearch
+    component: master
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: opensearch-cluster-master-headless
+  namespace: opensearch
+  labels:
+    app: opensearch
+    component: master
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - name: http
+      port: 9200
+      targetPort: 9200
+      protocol: TCP
+    - name: transport
+      port: 9300
+      targetPort: 9300
+      protocol: TCP
+  selector:
+    app: opensearch
+    component: master
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: opensearch-cluster-master
+  namespace: opensearch
+  labels:
+    app: opensearch
+    component: master
+spec:
+  serviceName: opensearch-cluster-master-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opensearch
+      component: master
+  template:
+    metadata:
+      labels:
+        app: opensearch
+        component: master
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsNonRoot: true
+      containers:
+        - name: opensearch
+          image: opensearchproject/opensearch:2.11.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9200
+              protocol: TCP
+            - name: transport
+              containerPort: 9300
+              protocol: TCP
+          env:
+            # Cluster configuration
+            - name: cluster.name
+              value: "phoenix-logs-cluster"
+            - name: node.name
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+
+            # Discovery configuration (single-node for demo)
+            - name: discovery.type
+              value: "single-node"
+
+            # Disable security plugin for internal cluster
+            # NOTE: For production, enable security and configure TLS
+            - name: DISABLE_SECURITY_PLUGIN
+              value: "true"
+
+            # Performance tuning
+            - name: bootstrap.memory_lock
+              value: "false"
+            - name: OPENSEARCH_JAVA_OPTS
+              value: "-Xms512m -Xmx512m"
+
+            # Network configuration
+            - name: network.host
+              value: "0.0.0.0"
+
+            # Persistence configuration
+            - name: action.auto_create_index
+              value: "true"
+            - name: plugins.security.disabled
+              value: "true"
+
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 2000m
+              memory: 2Gi
+
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/opensearch/data
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: false
+
+          livenessProbe:
+            tcpSocket:
+              port: 9200
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /_cluster/health?local=true
+              port: 9200
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: gp2
+        resources:
+          requests:
+            storage: 10Gi
+---
+# ConfigMap for FluentBit to use
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opensearch-cluster-config
+  namespace: opensearch
+data:
+  opensearch.host: "opensearch-cluster-master.opensearch.svc.cluster.local"
+  opensearch.port: "9200"
+  opensearch.scheme: "http"

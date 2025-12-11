@@ -1,0 +1,64 @@
+# Global values for Phoenix Booking Hotel Reservation System
+
+global:
+  # Container Registry Configuration (HTTP for demo, HTTPS for production)
+  registry:
+    url: "k8s-harbor-harborin-04b31170bb-1726610408.us-east-1.elb.amazonaws.com"
+    project: "phoenix-project"
+    imagePullSecrets:
+      - name: harbor-creds
+
+  # Environment (overridden in environment-specific values files)
+  environment: "production"
+
+  # Common labels
+  labels:
+    app.kubernetes.io/part-of: hotel-reservation
+    app.kubernetes.io/managed-by: argocd
+
+  # Security Context
+  securityContext:
+    fsGroup: 101
+    runAsUser: 101
+    runAsGroup: 101
+    runAsNonRoot: true
+
+  mongodb:
+    enabled: true
+    uri: "mongodb://<USER>:<PASSWORD>@<HOST>:<PORT>/<DATABASE>?replicaSet=<REPLICA_SET_NAME>"
+    secretName: "external-mongodb-credentials" # Secret to store URI, user, password
+
+# Sub-chart overrides
+frontend:
+  enabled: true
+  image:
+    # registry.url, registry.project, and image name will be constructed
+    name: "phoenix-frontend-service"
+
+hotel-service:
+  enabled: true
+  image:
+    name: "phoenix-hotel-service"
+
+booking-service:
+  enabled: true
+  image:
+    name: "phoenix-booking-service"
+
+identity-service:
+  enabled: true
+  image:
+    name: "phoenix-identity-service"
+
+search-service:
+  enabled: true
+  image:
+    name: "phoenix-search-service"
+
+notification-service:
+  enabled: true
+  image:
+    name: "phoenix-notification-service"
+
+rabbitmq:
+  enabled: true

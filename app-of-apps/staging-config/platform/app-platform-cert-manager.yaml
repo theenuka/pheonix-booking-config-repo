@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-cert-manager
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  sources:
+    # 1. The Helm Chart from Jetstack
+    - repoURL: https://charts.jetstack.io
+      chart: cert-manager
+      targetRevision: "1.19.1"
+      helm:
+        valueFiles:
+          - $values/platform/cert-manager/values.cert-manager.yaml
+    
+    # 2. Your Git Repo (for the values file)
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: staging
+      ref: values
+
+    # 3. Your Git Repo (for ClusterIssuer)
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: staging
+      path: platform/cert-manager
+      directory:
+        include: 'cluster-issuer.yaml'
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
