@@ -3,7 +3,7 @@
 global:
   # Container Registry Configuration (Using internal ClusterIP)
   registry:
-    url: "10.102.154.26"  # Harbor ClusterIP for internal cluster access
+    url: "k8s-istioing-phoenixa-873394dda6-1066746258.us-east-1.elb.amazonaws.com"  # Harbor ALB for external access
     project: "phoenix-project"
     imagePullSecrets:
       - name: harbor-credentials

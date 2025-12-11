@@ -3,17 +3,15 @@ kind: Application
 metadata:
   name: hotel-reservation-staging
   namespace: argocd
-<<<<<<< HEAD
-=======
   annotations:
     argocd-image-updater.argoproj.io/image-list: |
-      api-gateway=HARBOR_URL/phoenix-project/phoenix-api-gateway-service,
-      booking-service=HARBOR_URL/phoenix-project/phoenix-booking-service,
-      frontend=HARBOR_URL/phoenix-project/phoenix-frontend-service,
-      hotel-service=HARBOR_URL/phoenix-project/phoenix-hotel-service,
-      identity-service=HARBOR_URL/phoenix-project/phoenix-identity-service,
-      notification-service=HARBOR_URL/phoenix-project/phoenix-notification-service,
-      search-service=HARBOR_URL/phoenix-project/phoenix-search-service
+      api-gateway=k8s-istioing-phoenixa-873394dda6-1066746258.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-api-gateway-service,
+      booking-service=k8s-istioing-phoenixa-873394dda6-1066746258.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-booking-service,
+      frontend=k8s-istioing-phoenixa-873394dda6-1066746258.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-frontend-service,
+      hotel-service=k8s-istioing-phoenixa-873394dda6-1066746258.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-hotel-service,
+      identity-service=k8s-istioing-phoenixa-873394dda6-1066746258.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-identity-service,
+      notification-service=k8s-istioing-phoenixa-873394dda6-1066746258.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-notification-service,
+      search-service=k8s-istioing-phoenixa-873394dda6-1066746258.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-search-service
     argocd-image-updater.argoproj.io/api-gateway.update-strategy: latest
     argocd-image-updater.argoproj.io/api-gateway.allow-tags: regexp:^([a-f0-9]{40})$
     argocd-image-updater.argoproj.io/booking-service.update-strategy: latest
@@ -29,23 +27,18 @@ metadata:
     argocd-image-updater.argoproj.io/search-service.update-strategy: latest
     argocd-image-updater.argoproj.io/search-service.allow-tags: regexp:^([a-f0-9]{40})$
     argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd-repo-credentials/argocd-repo-credentials
-
->>>>>>> staging
 spec:
   project: default
   source:
     repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
     targetRevision: staging
     path: apps/hotel-reservation
-<<<<<<< HEAD
-=======
     helm:
       valueFiles:
         - values-staging.yaml
->>>>>>> staging
   destination:
     server: https://kubernetes.default.svc
-    namespace: staging
+    namespace: phoenix-staging
   syncPolicy:
     automated:
       prune: true
