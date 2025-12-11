@@ -1,0 +1,33 @@
+notification-service:
+  replicaCount: 1
+  image:
+    repository: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-notification-service
+    tag: "latest"
+  service:
+    port: 7101
+  serviceAccount:
+    name: notification-service-sa
+  imagePullSecrets:
+    - name: harbor-creds
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: http://otel-collector.observability:4317
+    - name: OTEL_SERVICE_NAME
+      value: notification-service
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: service.namespace=phoenix-app,service.name=notification-service,deployment.environment=prod
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 75
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1

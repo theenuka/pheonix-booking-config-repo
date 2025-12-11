@@ -1,0 +1,4 @@
+api-gateway:
+  image:
+    tag: "latest"
+  replicaCount: 1

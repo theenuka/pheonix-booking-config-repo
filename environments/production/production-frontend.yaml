@@ -1,7 +1,16 @@
-search-service:
-  image:
-    tag: "latest"
+frontend:
   replicaCount: 1
+  image:
+    repository: k8s-harbor-harborin-04b31170bb-1679859835.us-east-1.elb.amazonaws.com/phoenix-project/phoenix-frontend-service
+    tag: "latest"
+  service:
+    type: NodePort
+    port: 4173
+    nodePort: 30001
+  serviceAccount:
+    name: frontend-sa
+  imagePullSecrets:
+    - name: harbor-creds
   resources:
     requests:
       cpu: "50m"

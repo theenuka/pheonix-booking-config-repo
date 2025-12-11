@@ -1,0 +1,29 @@
+rabbitmq:
+  replicaCount: 1
+  image:
+    repository: bitnami/rabbitmq
+    tag: "3.12-management"
+    pullPolicy: IfNotPresent
+  serviceAccount:
+    name: rabbitmq-sa
+  service:
+    type: ClusterIP
+    port: 5672
+    managementPort: 15672
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  persistence:
+    enabled: false
+    size: 1Gi
+  auth:
+    username: admin
+    password: "SecureRabbitMQPass123!"
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true

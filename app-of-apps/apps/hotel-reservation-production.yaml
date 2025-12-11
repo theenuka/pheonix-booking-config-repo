@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hotel-reservation-production
+  namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: |
+      api-gateway=HARBOR_URL/phoenix-project/phoenix-api-gateway-service,
+      booking-service=HARBOR_URL/phoenix-project/phoenix-booking-service,
+      frontend=HARBOR_URL/phoenix-project/phoenix-frontend-service,
+      hotel-service=HARBOR_URL/phoenix-project/phoenix-hotel-service,
+      identity-service=HARBOR_URL/phoenix-project/phoenix-identity-service,
+      notification-service=HARBOR_URL/phoenix-project/phoenix-notification-service,
+      search-service=HARBOR_URL/phoenix-project/phoenix-search-service
+    argocd-image-updater.argoproj.io/api-gateway.update-strategy: latest
+    argocd-image-updater.argoproj.io/api-gateway.allow-tags: regexp:^([a-f0-9]{40})$
+    argocd-image-updater.argoproj.io/booking-service.update-strategy: latest
+    argocd-image-updater.argoproj.io/booking-service.allow-tags: regexp:^([a-f0-9]{40})$
+    argocd-image-updater.argoproj.io/frontend.update-strategy: latest
+    argocd-image-updater.argoproj.io/frontend.allow-tags: regexp:^([a-f0-9]{40})$
+    argocd-image-updater.argoproj.io/hotel-service.update-strategy: latest
+    argocd-image-updater.argoproj.io/hotel-service.allow-tags: regexp:^([a-f0-9]{40})$
+    argocd-image-updater.argoproj.io/identity-service.update-strategy: latest
+    argocd-image-updater.argoproj.io/identity-service.allow-tags: regexp:^([a-f0-9]{40})$
+    argocd-image-updater.argoproj.io/notification-service.update-strategy: latest
+    argocd-image-updater.argoproj.io/notification-service.allow-tags: regexp:^([a-f0-9]{40})$
+    argocd-image-updater.argoproj.io/search-service.update-strategy: latest
+    argocd-image-updater.argoproj.io/search-service.allow-tags: regexp:^([a-f0-9]{40})$
+    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd-repo-credentials/argocd-repo-credentials
+
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: production
+    path: apps/hotel-reservation
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: production
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

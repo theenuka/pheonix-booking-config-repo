@@ -1,0 +1,16 @@
+api-gateway:
+  image:
+    tag: "latest"
+  replicaCount: 3  # Production: 3 replicas for high availability
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "1000m"
+      memory: "512Mi"
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70

@@ -1,0 +1,8 @@
+replicaCount: 1
+image:
+  repository: some-registry/phoenix-project/phoenix-api-gateway-service
+  tag: "placeholder-tag"
+service:
+  port: 8080
+serviceAccount:
+  name: api-gateway-sa

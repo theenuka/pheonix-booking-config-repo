@@ -1,0 +1,213 @@
+# app-of-apps/platform/platform-apps.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-argocd
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: master
+    path: platform/argocd
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-monitoring
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 79.7.1
+      helm:
+        valueFiles:
+          - $values/platform/monitoring/values.yaml
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
+      ref: values
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
+      path: platform/monitoring
+      directory:
+        include: 'grafana-allow-policy.yaml'
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-vault
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: master
+    path: platform/vault
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-cert-manager
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: https://charts.jetstack.io
+    chart: cert-manager
+    targetRevision: v1.13.2
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-external-secrets
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: https://charts.external-secrets.io
+    chart: external-secrets
+    targetRevision: 0.9.7
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform-system
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-fluentbit
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: master
+    path: platform/logging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-harbor
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "7"
+spec:
+  project: default
+  source:
+    repoURL: https://helm.goharbor.io
+    chart: harbor
+    targetRevision: 1.18.0
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: harbor
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-istio-applications
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: master
+    path: platform/istio
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-kiali
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: master
+    path: platform/kiali
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-opensearch
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: master
+    path: platform/opensearch
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: opensearch
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-opensearch-dashboards
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: master
+    path: platform/opensearch-dashboards
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: opensearch
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-sonarqube
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+    targetRevision: master
+    path: platform/sonarqube
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sonarqube
