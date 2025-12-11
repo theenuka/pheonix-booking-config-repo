@@ -1,7 +1,7 @@
 # Staging Environment Values for Phoenix Booking Hotel Reservation System
 
 global:
-  # Container Registry Configuration
+  # Container Registry Configuration (HTTP for demo)
   registry:
     url: "k8s-harbor-harborin-04b31170bb-1726610408.us-east-1.elb.amazonaws.com"
     project: "phoenix-project"
