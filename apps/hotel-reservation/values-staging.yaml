@@ -24,6 +24,11 @@ global:
     runAsGroup: 101
     runAsNonRoot: true
 
+  mongodb:
+    enabled: true
+    uri: "mongodb://<USER_STAGING>:<PASSWORD_STAGING>@<HOST_STAGING>:<PORT_STAGING>/<DATABASE_STAGING>?replicaSet=<REPLICA_SET_NAME_STAGING>"
+    secretName: "external-mongodb-credentials-staging" # Secret to store URI, user, password for staging
+
 # Sub-chart overrides for staging
 frontend:
   enabled: true

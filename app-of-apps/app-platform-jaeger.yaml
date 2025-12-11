@@ -9,8 +9,9 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-    targetRevision: main
+- repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: main
+      ref: values
     path: platform/observability
     directory:
       recurse: false

@@ -18,12 +18,12 @@ spec:
     
     # 2. Your Git Repo (for the values file)
     - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-      targetRevision: master
+      targetRevision: main
       ref: values
 
     # 3. Your Git Repo (for ClusterIssuer)
     - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-      targetRevision: master
+      targetRevision: main
       path: platform/cert-manager
       directory:
         include: 'cluster-issuer.yaml'

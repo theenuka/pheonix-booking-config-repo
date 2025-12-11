@@ -32,8 +32,11 @@ spec:
   project: default
   source:
     repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-    targetRevision: production
+    targetRevision: main
     path: apps/hotel-reservation
+    helm:
+      valueFiles:
+        - values-production.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: production

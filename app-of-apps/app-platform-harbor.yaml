@@ -18,15 +18,13 @@ spec:
           
     # Git Repo (Value Provider)
     - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-      targetRevision: master
+      targetRevision: main
       ref: values
-
-    # Git Repo (Cert)
     - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-      targetRevision: master
+      targetRevision: main
       path: platform/registry
       directory:
-        include: harbor-cert.yaml
+        include: 'harbor-ingress.yaml'
 
   destination:
     server: https://kubernetes.default.svc

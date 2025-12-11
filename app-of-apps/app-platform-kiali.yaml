@@ -10,7 +10,7 @@ spec:
   sources:
     # 1. Git Repo (Value Provider)
     - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-      targetRevision: master
+      targetRevision: main
       ref: values
         
     # 2. Helm Chart (Kiali)
@@ -23,7 +23,7 @@ spec:
 
     # 3. Git Repo (Ingress)
     - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-      targetRevision: master
+      targetRevision: main
       path: platform/monitoring
       directory:
         include: 'kiali-ingress.yaml'

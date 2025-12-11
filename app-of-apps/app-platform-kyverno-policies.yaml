@@ -9,17 +9,13 @@ metadata:
     argocd.argoproj.io/sync-wave: "10"  # Deploy after Kyverno itself
 spec:
   project: default
-
   source:
     repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
     targetRevision: main
-    path: platform/policy
-    directory:
-      recurse: false
-      include: 'kyverno-policies.yaml'
-
+    path: platform/policy/policies
   destination:
     server: https://kubernetes.default.svc
+    namespace: kyverno
 
   syncPolicy:
     automated:

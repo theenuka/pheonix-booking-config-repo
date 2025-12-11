@@ -9,7 +9,7 @@ spec:
   project: default
   sources:
     - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-      targetRevision: master
+      targetRevision: main
       ref: values
     
     - repoURL: https://helm.releases.hashicorp.com
@@ -20,7 +20,7 @@ spec:
           - $values/platform/vault/values.vault.base.yaml
 
     - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
-      targetRevision: master
+      targetRevision: main
       path: platform/vault
       directory:
         include: 'ingress.yaml'
