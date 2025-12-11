@@ -6,9 +6,9 @@ image:
   name: "phoenix-frontend-service"
   tag: "latest"  # Overridden by ArgoCD Image Updater
 service:
-  type: NodePort
-  port: 4173
-  nodePort: 30001
+  type: ClusterIP
+  port: 80
+  targetPort: 4173
 serviceAccount:
   name: frontend-sa
 

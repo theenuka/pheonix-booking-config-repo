@@ -1,0 +1,183 @@
+# Production Environment Values for Phoenix Booking Hotel Reservation System
+
+global:
+  # Container Registry Configuration
+  registry:
+    url: "k8s-harbor-harborin-04b31170bb-1726610408.us-east-1.elb.amazonaws.com"
+    project: "phoenix-project"
+    imagePullSecrets:
+      - name: harbor-creds
+
+  # Environment
+  environment: "production"
+
+  # Common labels
+  labels:
+    app.kubernetes.io/part-of: hotel-reservation
+    app.kubernetes.io/managed-by: argocd
+    environment: production
+
+  # Security Context
+  securityContext:
+    fsGroup: 101
+    runAsUser: 101
+    runAsGroup: 101
+    runAsNonRoot: true
+
+# Sub-chart overrides for production
+frontend:
+  enabled: true
+  replicaCount: 3
+  image:
+    name: "phoenix-frontend-service"
+    tag: "latest"
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 2
+
+hotel-service:
+  enabled: true
+  replicaCount: 3
+  image:
+    name: "phoenix-hotel-service"
+    tag: "latest"
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "2000m"
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 2
+
+booking-service:
+  enabled: true
+  replicaCount: 3
+  image:
+    name: "phoenix-booking-service"
+    tag: "latest"
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "2000m"
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 2
+
+identity-service:
+  enabled: true
+  replicaCount: 3
+  image:
+    name: "phoenix-identity-service"
+    tag: "latest"
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "2000m"
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 2
+
+search-service:
+  enabled: true
+  replicaCount: 3
+  image:
+    name: "phoenix-search-service"
+    tag: "latest"
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "2000m"
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 2
+
+notification-service:
+  enabled: true
+  replicaCount: 3
+  image:
+    name: "phoenix-notification-service"
+    tag: "latest"
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 2
+
+api-gateway:
+  enabled: true
+  replicaCount: 3
+  image:
+    name: "phoenix-api-gateway"
+    tag: "latest"
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "2000m"
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 2
+
+rabbitmq:
+  enabled: true

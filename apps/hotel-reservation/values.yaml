@@ -3,7 +3,7 @@
 global:
   # Container Registry Configuration
   registry:
-    url: "harbor.phoenix-booking.com"  # Change this to your Harbor domain/URL
+    url: "k8s-harbor-harborin-04b31170bb-1726610408.us-east-1.elb.amazonaws.com"
     project: "phoenix-project"
     imagePullSecrets:
       - name: harbor-creds

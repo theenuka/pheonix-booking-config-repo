@@ -1,0 +1,127 @@
+# Staging Environment Values for Phoenix Booking Hotel Reservation System
+
+global:
+  # Container Registry Configuration
+  registry:
+    url: "k8s-harbor-harborin-04b31170bb-1726610408.us-east-1.elb.amazonaws.com"
+    project: "phoenix-project"
+    imagePullSecrets:
+      - name: harbor-creds
+
+  # Environment
+  environment: "staging"
+
+  # Common labels
+  labels:
+    app.kubernetes.io/part-of: hotel-reservation
+    app.kubernetes.io/managed-by: argocd
+    environment: staging
+
+  # Security Context
+  securityContext:
+    fsGroup: 101
+    runAsUser: 101
+    runAsGroup: 101
+    runAsNonRoot: true
+
+# Sub-chart overrides for staging
+frontend:
+  enabled: true
+  replicaCount: 2
+  image:
+    name: "phoenix-frontend-service"
+    tag: "latest"
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+hotel-service:
+  enabled: true
+  replicaCount: 2
+  image:
+    name: "phoenix-hotel-service"
+    tag: "latest"
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+booking-service:
+  enabled: true
+  replicaCount: 2
+  image:
+    name: "phoenix-booking-service"
+    tag: "latest"
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+identity-service:
+  enabled: true
+  replicaCount: 2
+  image:
+    name: "phoenix-identity-service"
+    tag: "latest"
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+search-service:
+  enabled: true
+  replicaCount: 2
+  image:
+    name: "phoenix-search-service"
+    tag: "latest"
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+notification-service:
+  enabled: true
+  replicaCount: 2
+  image:
+    name: "phoenix-notification-service"
+    tag: "latest"
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+api-gateway:
+  enabled: true
+  replicaCount: 2
+  image:
+    name: "phoenix-api-gateway"
+    tag: "latest"
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+rabbitmq:
+  enabled: true
