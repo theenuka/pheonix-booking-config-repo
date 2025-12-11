@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kiali-dashboard
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  project: default
+  sources:
+    # 1. Git Repo (Value Provider)
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
+      ref: values
+        
+    # 2. Helm Chart (Kiali)
+    - repoURL: https://kiali.org/helm-charts
+      targetRevision: 2.19.0
+      chart: kiali-server
+      helm:
+        valueFiles:
+          - $values/platform/monitoring/kiali-values.yaml
+
+    # 3. Git Repo (Ingress)
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
+      path: platform/monitoring
+      directory:
+        include: 'kiali-ingress.yaml'
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+  ignoreDifferences:
+    - group: ""
+      kind: ConfigMap
+      name: kiali
+      jsonPointers:
+        - /data
+    - group: apps
+      kind: Deployment
+      name: kiali
+      jsonPointers:
+        - /spec/template/metadata/annotations/checksum~1config
+

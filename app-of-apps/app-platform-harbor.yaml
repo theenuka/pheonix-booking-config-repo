@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: harbor
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "7"
+spec:
+  project: default
+  sources:
+    # Official Harbor Helm Chart Repository
+    - repoURL: https://helm.goharbor.io
+      targetRevision: 1.18.0
+      chart: harbor
+      helm:
+        valueFiles:
+          - $values/platform/registry/harbor-values.yaml
+          
+    # Git Repo (Value Provider)
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
+      ref: values
+
+    # Git Repo (Cert)
+    - repoURL: https://github.com/theenuka/pheonix-booking-config-repo.git
+      targetRevision: master
+      path: platform/registry
+      directory:
+        include: harbor-cert.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: harbor
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: harbor-registry-htpasswd
+      jsonPointers:
+        - /data
+    - group: ""
+      kind: Secret
+      name: harbor-core
+      jsonPointers:
+        - /data
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/metadata/annotations/checksum~1configmap
+        - /spec/template/metadata/annotations/checksum~1secret
+        - /spec/template/metadata/annotations/checksum~1secret-core
+        - /spec/template/metadata/annotations/checksum~1secret-jobservice
