@@ -27,101 +27,101 @@ global:
 # Sub-chart overrides for staging
 frontend:
   enabled: true
-  replicaCount: 2
+  replicaCount: 1
   image:
     name: "phoenix-frontend-service"
     tag: "latest"
   resources:
     requests:
-      memory: "128Mi"
-      cpu: "100m"
+      memory: "64Mi"
+      cpu: "25m"
     limits:
-      memory: "512Mi"
-      cpu: "500m"
+      memory: "256Mi"
+      cpu: "250m"
 
 hotel-service:
   enabled: true
-  replicaCount: 2
+  replicaCount: 1
   image:
     name: "phoenix-hotel-service"
     tag: "latest"
   resources:
     requests:
-      memory: "256Mi"
-      cpu: "200m"
+      memory: "128Mi"
+      cpu: "50m"
     limits:
-      memory: "1Gi"
-      cpu: "1000m"
+      memory: "512Mi"
+      cpu: "500m"
 
 booking-service:
   enabled: true
-  replicaCount: 2
+  replicaCount: 1
   image:
     name: "phoenix-booking-service"
     tag: "latest"
   resources:
     requests:
-      memory: "256Mi"
-      cpu: "200m"
+      memory: "128Mi"
+      cpu: "50m"
     limits:
-      memory: "1Gi"
-      cpu: "1000m"
+      memory: "512Mi"
+      cpu: "500m"
 
 identity-service:
   enabled: true
-  replicaCount: 2
+  replicaCount: 1
   image:
     name: "phoenix-identity-service"
     tag: "latest"
   resources:
     requests:
-      memory: "256Mi"
-      cpu: "200m"
+      memory: "128Mi"
+      cpu: "50m"
     limits:
-      memory: "1Gi"
-      cpu: "1000m"
+      memory: "512Mi"
+      cpu: "500m"
 
 search-service:
   enabled: true
-  replicaCount: 2
+  replicaCount: 1
   image:
     name: "phoenix-search-service"
     tag: "latest"
   resources:
     requests:
-      memory: "256Mi"
-      cpu: "200m"
+      memory: "128Mi"
+      cpu: "50m"
     limits:
-      memory: "1Gi"
-      cpu: "1000m"
+      memory: "512Mi"
+      cpu: "500m"
 
 notification-service:
   enabled: true
-  replicaCount: 2
+  replicaCount: 1
   image:
     name: "phoenix-notification-service"
     tag: "latest"
   resources:
     requests:
-      memory: "128Mi"
-      cpu: "100m"
+      memory: "64Mi"
+      cpu: "25m"
     limits:
-      memory: "512Mi"
-      cpu: "500m"
+      memory: "256Mi"
+      cpu: "250m"
 
 api-gateway:
   enabled: true
-  replicaCount: 2
+  replicaCount: 1
   image:
     name: "phoenix-api-gateway"
     tag: "latest"
   resources:
     requests:
-      memory: "256Mi"
-      cpu: "200m"
+      memory: "128Mi"
+      cpu: "50m"
     limits:
-      memory: "1Gi"
-      cpu: "1000m"
+      memory: "512Mi"
+      cpu: "500m"
 
 rabbitmq:
   enabled: true
