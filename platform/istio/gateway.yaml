@@ -13,17 +13,5 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "*"
-    # tls:
-    #   httpsRedirect: true
-
-  # Port 443: Secure Traffic (Wildcard)
-  - port:
-      number: 443
-      name: https
-      protocol: HTTPS
-    hosts:
-    - "*.pheonix.live"
-    tls:
-      mode: SIMPLE
-      credentialName: pheonix-live-tls  # Uses your new wildcard cert
+    - "k8s-istioing-phoenixa-873394dda6-1066746258.us-east-1.elb.amazonaws.com"
+    - "k8s-argocd-argocdse-f4b1608958-1653558420.us-east-1.elb.amazonaws.com"

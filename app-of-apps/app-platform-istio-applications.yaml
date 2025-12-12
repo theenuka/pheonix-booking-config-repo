@@ -105,7 +105,7 @@ spec:
       targetRevision: main
       path: platform/istio
       directory:
-        include: '{certificate.yaml,gateway.yaml,jwt-validation-policy.yaml,alb-ingress.yaml,peer-authentication.yaml}'
+        include: '{certificate.yaml,gateway.yaml,jwt-validation-policy.yaml,peer-authentication.yaml}'
 
 
   destination:

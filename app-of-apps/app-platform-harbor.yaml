@@ -24,7 +24,7 @@ spec:
       targetRevision: main
       path: platform/registry
       directory:
-        include: 'harbor-istio-gw.yaml'
+        include: 'harbor-vs.yaml'
 
   destination:
     server: https://kubernetes.default.svc
