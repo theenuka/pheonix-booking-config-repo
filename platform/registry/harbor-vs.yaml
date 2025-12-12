@@ -1,4 +1,4 @@
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: harbor-vs
@@ -9,11 +9,32 @@ spec:
   gateways:
   - istio-ingress/main-gateway
   http:
+  # Route for the Harbor Portal (UI)
   - match:
     - uri:
         prefix: /
     route:
     - destination:
+        host: harbor-portal
+        port:
+          number: 80
+  # Route for the Harbor Core API
+  - match:
+    - uri:
+        prefix: /api
+    - uri:
+        prefix: /service
+    route:
+    - destination:
         host: harbor-core
         port:
           number: 80
+  # Route for the Docker Registry API (v2)
+  - match:
+    - uri:
+        prefix: /v2
+    route:
+    - destination:
+        host: harbor-registry
+        port:
+          number: 5000
